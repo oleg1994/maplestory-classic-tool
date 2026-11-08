@@ -23,8 +23,8 @@ The app is called **MapleTool** (`MapleTool.exe`).
 
 ![EXP / meso tracker on the status bar](docs/images/exp-tracker.png)
 
-*(The screenshots come from the test images, where other players and the
-background are pixelated for privacy.)*
+*(The screenshots come from the test images, where the author's character name
+is blurred.)*
 
 ---
 
@@ -311,7 +311,7 @@ python -m mapletool.calibrate build tests/fixtures/shops --out mapletool/assets/
 `--preview sheet.png` to see every size.
 
 Contributions are welcome. New labelled screenshots of shops are especially
-useful; please pixelate other players' names first.
+useful; blur your own character name first if you want to stay anonymous.
 
 ---
 
