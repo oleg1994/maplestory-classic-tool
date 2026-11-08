@@ -1,0 +1,10 @@
+{"shop": true, "client_size": [2560, 1600], "base_size": [1228, 768],
+ "note": "live capture; the overlay's own side panel is visible top-left (outside the shop window); rows 3-5 are rechargeable stars (one item each)",
+ "rows": [
+ {"name": "Leather", "qty": 1, "price": 149},
+ {"name": "Silver Ore", "qty": 1, "price": 88},
+ {"name": "Emerald Ore", "qty": 1, "price": 99},
+ {"name": "Kumbi Throwing Stars", "qty": 700, "price": 669999},
+ {"name": "Kumbi Throwing Stars", "qty": 700, "price": 669999},
+ {"name": "Kumbi Throwing Stars", "qty": 700, "price": 669999}
+]}

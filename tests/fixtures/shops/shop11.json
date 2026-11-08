@@ -1,0 +1,9 @@
+{"shop": true, "note": "live 4K capture; Elixir shop; rows 2 and 5 are sold-out listings drawn faded",
+ "rows": [
+ {"name": "Silver Ore", "qty": 1, "price": 90},
+ {"name": "Bronze Ore", "qty": 1, "price": 90},
+ null,
+ {"name": "Elixir", "qty": 1, "price": 700},
+ {"name": "Green Bennis Chainmail", "qty": 1, "price": 3500},
+ null
+]}

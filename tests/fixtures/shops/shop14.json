@@ -1,0 +1,9 @@
+{"shop": true, "note": "live 4K capture; second Yellow Square shop; row 2 is a sold-out listing drawn faded",
+ "rows": [
+ {"name": "Pig Illustrated", "qty": 1, "price": 6499},
+ {"name": "Red Hwarang Shirt", "qty": 1, "price": 5999},
+ null,
+ {"name": "Fork on a Stick", "qty": 1, "price": 3999},
+ {"name": "Yellow Square", "qty": 1, "price": 3999},
+ {"name": "Star Earrings", "qty": 1, "price": 4999}
+]}

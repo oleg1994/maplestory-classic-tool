@@ -1,0 +1,9 @@
+{"shop": true, "note": "live 4K capture; Blue Qi Pao (Q)",
+ "rows": [
+ {"name": "Dark Master Sergeant", "qty": 1, "price": 4199},
+ {"name": "Blue Legolier", "qty": 1, "price": 4999},
+ {"name": "Blue Qi Pao", "qty": 1, "price": 1999},
+ {"name": "Mithril War Boots", "qty": 1, "price": 3999},
+ {"name": "Fireman's Axe", "qty": 1, "price": 6999},
+ {"name": "Old Wooden Staff", "qty": 1, "price": 4499}
+]}

@@ -1,0 +1,5 @@
+{"shop": true, "note": "live 4K capture; a shop with a single listing, rows 1-5 empty",
+ "rows": [
+ {"name": "Adamantium Ore", "qty": 1, "price": 99},
+ null, null, null, null, null
+]}

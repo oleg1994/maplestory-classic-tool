@@ -1,0 +1,9 @@
+{"shop": true, "note": "live 4K capture; row 0 is a sold-out listing drawn faded (Iron Ore)",
+ "rows": [
+ null,
+ {"name": "Diamond Ore", "qty": 1, "price": 300},
+ {"name": "Aquamarine Ore", "qty": 1, "price": 150},
+ {"name": "Orihalcon Ore", "qty": 1, "price": 150},
+ {"name": "Topaz Ore", "qty": 1, "price": 150},
+ {"name": "Gold Ore", "qty": 1, "price": 150}
+]}

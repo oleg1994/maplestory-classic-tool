@@ -1,0 +1,9 @@
+{"shop": true, "note": "live 4K capture; rows 2, 3 and 5 are sold-out listings drawn faded (Pure Water, Unagi, Speed Potion)",
+ "rows": [
+ {"name": "Emerald Earrings", "qty": 1, "price": 22000},
+ {"name": "Red Cross Earrings", "qty": 1, "price": 5000},
+ null,
+ null,
+ {"name": "Dexterity Potion", "qty": 1, "price": 300, "touching": ["xt", "ty"]},
+ null
+]}

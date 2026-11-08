@@ -1,0 +1,20 @@
+{
+  "base_size": [1366, 768],
+  "anchor_to_grid": [-99, 95],
+  "rows": 6,
+  "row_pitch": 40,
+  "name_box": [3, 6, 158, 14],
+  "price_box": [3, 23, 158, 14],
+  "ink_max_gray": 120,
+  "label_dx": 186,
+  "price_format": "{qty} for {price:,} mesos",
+  "window_box": [-141, -58, 523, 406],
+  "shop_id_boxes": [[-124, -52, 498, 18], [-127, 77, 82, 12]],
+  "icon_box": [-37, 3, 35, 35],
+  "statusbar": {
+    "exp_text_box": [461, 2, 102, 12],
+    "level_box": [43, 9, 24, 13],
+    "panel": [0, -1, 207, 32],
+    "bar_top": -6
+  }
+}

@@ -1,0 +1,8 @@
+{"shop": true, "client_size": [2560, 1600], "base_size": [1228, 768], "rows": [
+ {"name": "Gloves Attack Scroll: Inter...", "qty": 1, "price": 1499999},
+ {"name": "Claw Attack Scroll: Interm...", "qty": 1, "price": 429999},
+ {"name": "Earring LUK Scroll: Inter...", "qty": 1, "price": 159999},
+ {"name": "Earring INT Scroll: Interm...", "qty": 1, "price": 124999},
+ {"name": "Earring STR Scroll: Inter...", "qty": 1, "price": 104999},
+ {"name": "Earring DEX Scroll: Inter...", "qty": 1, "price": 112999}
+]}

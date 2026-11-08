@@ -1,0 +1,9 @@
+{"shop": true, "note": "live 4K capture; Vaulter 2000 and Red Viper (V); row 1 is a sold-out listing drawn faded; the item inventory is open (mesos box 599,144)",
+ "rows": [
+ {"name": "Vaulter 2000", "qty": 1, "price": 2000000},
+ null,
+ {"name": "Zeco", "qty": 1, "price": 39999},
+ {"name": "Gold Scaler", "qty": 1, "price": 29999},
+ {"name": "Mithril Scaler", "qty": 1, "price": 29999},
+ {"name": "Red Viper", "qty": 1, "price": 29999}
+]}
