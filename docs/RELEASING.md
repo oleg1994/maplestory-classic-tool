@@ -42,7 +42,8 @@ Every test must pass and none may be skipped (`-rs` lists skips with their
 reason). The tests marked `live` are left out by default ("deselected"); that's
 expected.
 
-If MapleStory is open, also run the tests that need the running game:
+If MapleStory is open with a player shop showing, also run the tests that need the
+running game (they look for that shop on screen):
 
 ```bat
 .venv\Scripts\python -m pytest -m live
