@@ -6,16 +6,16 @@ import cv2
 import numpy as np
 import pytest
 
-from mapletool.calibrate import load_fixtures
-from mapletool.catalog import fold_il
-from mapletool.detect import ShopLocator
-from mapletool.glyphs import GlyphSet
-from mapletool.layout import load_layout
-from mapletool.shop import PRICE_RE, parse_price, row_inks, to_listing
+from maplestory_classic_tool.calibrate import load_fixtures
+from maplestory_classic_tool.catalog import fold_il
+from maplestory_classic_tool.detect import ShopLocator
+from maplestory_classic_tool.glyphs import GlyphSet
+from maplestory_classic_tool.layout import load_layout
+from maplestory_classic_tool.shop import PRICE_RE, parse_price, row_inks, to_listing
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "shops"
-ASSETS = ROOT / "mapletool" / "assets"
+ASSETS = ROOT / "maplestory_classic_tool" / "assets"
 
 
 @pytest.fixture(scope="module")
@@ -219,24 +219,24 @@ ACCEPT_PAIRS = [
 
 @pytest.mark.parametrize("glyph,ocr", REJECT_PAIRS)
 def test_agrees_with_glyphs_rejects(glyph, ocr):
-    from mapletool.shop import agrees_with_glyphs
+    from maplestory_classic_tool.shop import agrees_with_glyphs
     assert not agrees_with_glyphs(glyph, ocr, "8")
 
 
 @pytest.mark.parametrize("glyph,ocr", ACCEPT_PAIRS)
 def test_agrees_with_glyphs_accepts(glyph, ocr):
-    from mapletool.shop import agrees_with_glyphs
+    from maplestory_classic_tool.shop import agrees_with_glyphs
     assert agrees_with_glyphs(glyph, ocr, "8")
 
 
 def test_agrees_with_glyphs_all_digits_known():
-    from mapletool.shop import agrees_with_glyphs
+    from maplestory_classic_tool.shop import agrees_with_glyphs
     assert not agrees_with_glyphs("1 for 3,?00 mesos", "1 for 3,800 mesos", "")
     assert agrees_with_glyphs("1 for 3,000 mesos??", "1 for 3,000 mesos", "")
 
 
 def test_agrees_with_glyphs():
-    from mapletool.shop import agrees_with_glyphs as ag
+    from maplestory_classic_tool.shop import agrees_with_glyphs as ag
     assert ag("1 for 1 ,?99 mesos ??", "1 for 1,899 mesos", "8")  # trailing fringe dropped
     assert ag("1 for 439 mesos ??", "1 for 439 mesos", "8")
     assert ag("1 for 3,?00 mesos", "1 for 3,800 mesos", "8")
@@ -260,7 +260,7 @@ def test_glyphset_chars(glyphs):
 def test_agreement_never_lowers_price_or_raises_qty_bruteforce():
     import itertools
     import random
-    from mapletool.shop import agrees_with_glyphs
+    from maplestory_classic_tool.shop import agrees_with_glyphs
     rng = random.Random(1234)
     qtys = ["1", "8", "18", "108", "88"]
     prices = ["8,000", "88,000", "18", "800", "1,888", "58", "8", "380,000"]
@@ -310,7 +310,7 @@ def test_agreement_never_lowers_price_or_raises_qty_bruteforce():
     assert checked > 0
 
 # --- name OCR fallback agreement (review round 2) ------------------------------
-from mapletool.shop import name_agrees  # noqa: E402
+from maplestory_classic_tool.shop import name_agrees  # noqa: E402
 
 
 @pytest.mark.parametrize("glyph,ocr", [

@@ -5,8 +5,8 @@ import pytest
 
 from types import SimpleNamespace as NS
 
-from mapletool import panel
-from mapletool.panel import button_states, status_text
+from maplestory_classic_tool import panel
+from maplestory_classic_tool.panel import button_states, status_text
 
 
 @pytest.mark.parametrize("state,text", [
@@ -29,7 +29,7 @@ def test_button_states():
 
 
 def test_selftest_subprocess_exit_zero():
-    r = subprocess.run([sys.executable, "-m", "mapletool", "--selftest"], capture_output=True, text=True, timeout=120)
+    r = subprocess.run([sys.executable, "-m", "maplestory_classic_tool", "--selftest"], capture_output=True, text=True, timeout=120)
     assert r.returncode == 0, r.stdout + r.stderr
 
 
@@ -37,7 +37,7 @@ def test_relaunch_args(monkeypatch):
     monkeypatch.setattr(sys, "frozen", True, raising=False)
     assert panel.relaunch_args() == (sys.executable, "")
     monkeypatch.setattr(sys, "frozen", False, raising=False)
-    assert panel.relaunch_args() == (sys.executable, "-m mapletool --gui")
+    assert panel.relaunch_args() == (sys.executable, "-m maplestory_classic_tool --gui")
 
 
 def _fake_shell(monkeypatch, rc):
@@ -101,7 +101,7 @@ def test_exp_tracker_checkbox_reaches_session():
 
 
 def test_initial_checkbox_values_from_settings():
-    from mapletool.config import Settings
+    from maplestory_classic_tool.config import Settings
     assert panel.initial_checks(Settings(show_all=True, exp_tracker=False)) == {
         "show_all": True, "exp_tracker": False, "block_alt_shift": True}
 

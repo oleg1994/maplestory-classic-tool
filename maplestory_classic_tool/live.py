@@ -12,24 +12,24 @@ from pathlib import Path
 import cv2
 import requests
 
-from mapletool.catalog import Catalog, sync
-from mapletool.config import data_dir, load_settings
-from mapletool.detect import ShopLocator
-from mapletool.mapid import MAP_RESET_S, MapWatch, MinimapReader
-from mapletool.meso import MesoReader, MesoTracker
-from mapletool.exp import (READ_INTERVAL, MesoLine, ExpReader, ExpTracker, StatusBarLocator, build_exp_box,
+from maplestory_classic_tool.catalog import Catalog, sync
+from maplestory_classic_tool.config import data_dir, load_settings
+from maplestory_classic_tool.detect import ShopLocator
+from maplestory_classic_tool.mapid import MAP_RESET_S, MapWatch, MinimapReader
+from maplestory_classic_tool.meso import MesoReader, MesoTracker
+from maplestory_classic_tool.exp import (READ_INTERVAL, MesoLine, ExpReader, ExpTracker, StatusBarLocator, build_exp_box,
                            exp_box_to_screen, load_statusbar)
-from mapletool.fallback_ocr import WindowsOcr
-from mapletool.glyphs import GlyphSet
-from mapletool.evaluate import ScanResult
-from mapletool.layout import PROBE_MIN, BaseResolver, load_layout
-from mapletool.scanner import Scanner
-from mapletool.sidelist import ShopListing, build_panel, panel_to_screen
-from mapletool.winutil import SingleInstance, log_memory
+from maplestory_classic_tool.fallback_ocr import WindowsOcr
+from maplestory_classic_tool.glyphs import GlyphSet
+from maplestory_classic_tool.evaluate import ScanResult
+from maplestory_classic_tool.layout import PROBE_MIN, BaseResolver, load_layout
+from maplestory_classic_tool.scanner import Scanner
+from maplestory_classic_tool.sidelist import ShopListing, build_panel, panel_to_screen
+from maplestory_classic_tool.winutil import SingleInstance, log_memory
 
-log = logging.getLogger("mapletool")
+log = logging.getLogger("maplestory_classic_tool")
 
-ASSETS = Path(__file__).resolve().parent / "assets"  # frozen: datas map to mapletool/assets under _MEIPASS
+ASSETS = Path(__file__).resolve().parent / "assets"  # frozen: datas map to maplestory_classic_tool/assets under _MEIPASS
 IDLE_INTERVAL = 0.25
 ERROR_LOG_INTERVAL = 60.0
 MEMORY_LOG_INTERVAL = 300.0
@@ -418,8 +418,8 @@ def run_live() -> int:
         return 1
     import tkinter as tk
 
-    from mapletool.overlay import Overlay
-    from mapletool.session import LiveSession
+    from maplestory_classic_tool.overlay import Overlay
+    from maplestory_classic_tool.session import LiveSession
 
     root = tk.Tk()
     root.withdraw()
@@ -460,7 +460,7 @@ def selftest() -> int:
     try:
         import numpy as np
 
-        from mapletool.hotkeys import vk  # noqa: F401  (import check)
+        from maplestory_classic_tool.hotkeys import vk  # noqa: F401  (import check)
         scanner, _ = build_scanner(sync_if_empty=False)
         w, h = scanner.layout.base_size
         result = scanner.scan(np.zeros((h, w), np.uint8))
@@ -470,11 +470,11 @@ def selftest() -> int:
         inventory = build_meso_reader().read(np.zeros((h, w), np.uint8)).visible  # and the meso label
         import dxcam  # noqa: F401
 
-        from mapletool.capture import DxcamBackend
+        from maplestory_classic_tool.capture import DxcamBackend
         outputs = len(DxcamBackend().outputs())  # enumerates monitors only; nothing is captured
         import tkinter  # noqa: F401  (frozen build must bundle Tk; no window is created)
-        import mapletool.panel  # noqa: F401
-        import mapletool.session  # noqa: F401
+        import maplestory_classic_tool.panel  # noqa: F401
+        import maplestory_classic_tool.session  # noqa: F401
         import mss  # noqa: F401
         msg = (f"selftest ok: catalog={len(scanner.catalog)} anchor={result.anchor} statusbar={bar} "
                f"minimap={minimap} inventory={inventory} ocr={'yes' if ocr else 'no'} outputs={outputs} {time.monotonic() - t0:.2f}s")

@@ -3,8 +3,8 @@ import tkinter
 
 import pytest
 
-from mapletool import live, panel
-from mapletool.winutil import MUTEX_NAME, SingleInstance
+from maplestory_classic_tool import live, panel
+from maplestory_classic_tool.winutil import MUTEX_NAME, SingleInstance
 
 
 def _name():
@@ -57,7 +57,7 @@ def test_gui_second_launch_shows_message_and_exits(monkeypatch):
 def test_headless_second_launch_logs_and_exits_1(monkeypatch, caplog):
     _no_windows(monkeypatch)
     monkeypatch.setattr(live, "SingleInstance", _Taken)
-    with caplog.at_level("ERROR", logger="mapletool"):
+    with caplog.at_level("ERROR", logger="maplestory_classic_tool"):
         assert live.run_live() == 1
     assert "already running" in caplog.text
 
@@ -67,7 +67,7 @@ def test_second_process_cannot_acquire():
     import sys
     a = SingleInstance(_name())
     assert a.acquire()
-    code = ("import sys; from mapletool.winutil import SingleInstance; "
+    code = ("import sys; from maplestory_classic_tool.winutil import SingleInstance; "
             "sys.exit(0 if SingleInstance(sys.argv[1]).acquire() else 3)")
     try:
         r = subprocess.run([sys.executable, "-c", code, _name()], timeout=60)

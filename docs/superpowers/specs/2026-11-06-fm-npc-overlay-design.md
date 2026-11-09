@@ -29,7 +29,7 @@ and show the profit in mesos.
   - Bulk: `GET /items?limit=500&page=N`, response `{items, page, hasMore, ...}`; loop until `hasMore` is false.
     (`total`/`totalPages` are unreliable; ignore them.)
   - Each item: `id`, `name`, `stats` (dict **or JSON-encoded string**), `stats.price` = NPC sell price per unit.
-- Cached locally in `%LOCALAPPDATA%\mapletool\catalog.json`; refreshed when older than 7 days.
+- Cached locally in `%LOCALAPPDATA%\maplestory_classic_tool\catalog.json`; refreshed when older than 7 days.
 - MeowDB warns some values may still be closed-test values. Overlay is advisory.
 
 ## Shop reading

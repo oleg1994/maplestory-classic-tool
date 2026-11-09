@@ -1,6 +1,6 @@
 import numpy as np
 
-from mapletool import draw
+from maplestory_classic_tool import draw
 
 
 def test_round_rect_points_inside_bounds_and_corners_cut():

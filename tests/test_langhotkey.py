@@ -1,6 +1,6 @@
 import json
 
-from mapletool.langhotkey import LangHotkeyBlocker
+from maplestory_classic_tool.langhotkey import LangHotkeyBlocker
 
 
 class FakeReg:

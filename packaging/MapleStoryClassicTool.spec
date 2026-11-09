@@ -20,12 +20,12 @@ hidden = [
 for pkg in ("dxcam", "comtypes", "winrt"):
     hidden += collect_submodules(pkg)
 
-datas = [(str(p), "mapletool/assets") for p in (root / "mapletool" / "assets").glob("*")]
+datas = [(str(p), "maplestory_classic_tool/assets") for p in (root / "maplestory_classic_tool" / "assets").glob("*")]
 datas += collect_data_files("dxcam")
 datas += collect_data_files("comtypes")
 
 a = Analysis(
-    [str(root / "packaging" / "mapletool_app.py")],
+    [str(root / "packaging" / "maplestory_classic_tool_app.py")],
     pathex=[str(root)],
     datas=datas,
     hiddenimports=sorted(set(hidden)),
@@ -38,8 +38,8 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name="MapleTool",
-    icon=str(root / "mapletool" / "assets" / "app.ico"),
+    name="MapleStoryClassicTool",
+    icon=str(root / "maplestory_classic_tool" / "assets" / "app.ico"),
     console=False,
     upx=False,
     runtime_tmpdir=None,

@@ -1,4 +1,4 @@
-"""Draw the app icon (mapletool/assets/app.ico) with OpenCV: no image editor or Pillow needed.
+"""Draw the app icon (maplestory_classic_tool/assets/app.ico) with OpenCV: no image editor or Pillow needed.
 
 A slate tile in the status bar's colours, an orange maple leaf, and a green "profit" arrow badge.
 Drawn once at 1024 px and downscaled per icon size (antialiased); the .ico holds PNG entries.
@@ -15,7 +15,7 @@ import cv2
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "mapletool" / "assets" / "app.ico"
+OUT = ROOT / "maplestory_classic_tool" / "assets" / "app.ico"
 SIZES = (256, 128, 64, 48, 40, 32, 24, 20, 16)
 N = 1024  # drawing canvas
 

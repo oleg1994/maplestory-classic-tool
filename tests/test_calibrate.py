@@ -5,16 +5,16 @@ import cv2
 import numpy as np
 import pytest
 
-from mapletool.calibrate import (
+from maplestory_classic_tool.calibrate import (
     Line, build, collapse_digit_spaces, fixture_lines, load_fixtures, match_anchor, price_text,
 )
-from mapletool.catalog import fold_il
-from mapletool.glyphs import GlyphSet, binarize, column_runs
-from mapletool.layout import Layout, load_layout, to_base
+from maplestory_classic_tool.catalog import fold_il
+from maplestory_classic_tool.glyphs import GlyphSet, binarize, column_runs
+from maplestory_classic_tool.layout import Layout, load_layout, to_base
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "shops"
-ASSETS = ROOT / "mapletool" / "assets"
+ASSETS = ROOT / "maplestory_classic_tool" / "assets"
 HOLDOUT = "shop6"  # only fixture whose rows appear nowhere else
 
 

@@ -1,6 +1,6 @@
-from mapletool.catalog import Catalog
-from mapletool.evaluate import evaluate
-from mapletool.model import Item, Listing
+from maplestory_classic_tool.catalog import Catalog
+from maplestory_classic_tool.evaluate import evaluate
+from maplestory_classic_tool.model import Item, Listing
 
 CAT = Catalog([Item(270, "Red Potion", 5), Item(9, "Event Item", 0)], 0)
 

@@ -1,7 +1,7 @@
 """Build glyphs.json from labelled shop screenshots; draw layout debug images.
 
-python -m mapletool.calibrate build FIXTURE_DIR --out mapletool/assets/glyphs.json [--holdout NAME]
-python -m mapletool.calibrate draw SHOT.png --out dbg.png
+python -m maplestory_classic_tool.calibrate build FIXTURE_DIR --out maplestory_classic_tool/assets/glyphs.json [--holdout NAME]
+python -m maplestory_classic_tool.calibrate draw SHOT.png --out dbg.png
 """
 import argparse
 import difflib
@@ -14,10 +14,10 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from mapletool.catalog import fold_il
-from mapletool.glyphs import GlyphSet, binarize, column_runs, glyph_key
-from mapletool.layout import Layout, load_layout, to_base
-from mapletool.shop import collapse_digit_spaces
+from maplestory_classic_tool.catalog import fold_il
+from maplestory_classic_tool.glyphs import GlyphSet, binarize, column_runs, glyph_key
+from maplestory_classic_tool.layout import Layout, load_layout, to_base
+from maplestory_classic_tool.shop import collapse_digit_spaces
 
 ASSETS = Path(__file__).resolve().parent / "assets"
 DEFAULT_PRICE_FORMAT = "{qty} for {price:,} mesos"
@@ -334,7 +334,7 @@ def draw(shot: Path, out: Path, layout: Layout, anchor: np.ndarray) -> float:
 
 
 def main(argv=None) -> int:
-    p = argparse.ArgumentParser(prog="python -m mapletool.calibrate")
+    p = argparse.ArgumentParser(prog="python -m maplestory_classic_tool.calibrate")
     p.add_argument("--layout", type=Path, default=ASSETS / "layout.json")
     p.add_argument("--anchor", type=Path, default=ASSETS / "anchor.png")
     sub = p.add_subparsers(dest="cmd", required=True)

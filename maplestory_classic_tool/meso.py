@@ -14,8 +14,8 @@ from dataclasses import dataclass
 import cv2
 import numpy as np
 
-from mapletool.glyphs import column_runs
-from mapletool.rate import GainRate
+from maplestory_classic_tool.glyphs import column_runs
+from maplestory_classic_tool.rate import GainRate
 
 MIN_SCORE = 0.9  # label match (inventory open: 1.0; anything else in the fixtures: <= 0.62)
 CACHE_MAX_MEAN_DIFF = 4

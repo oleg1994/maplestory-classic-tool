@@ -4,10 +4,10 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from mapletool.catalog import fold_il
-from mapletool.glyphs import binarize
-from mapletool.layout import Layout
-from mapletool.model import Listing
+from maplestory_classic_tool.catalog import fold_il
+from maplestory_classic_tool.glyphs import binarize
+from maplestory_classic_tool.layout import Layout
+from maplestory_classic_tool.model import Listing
 
 _NUM = r"[1-9]\d{0,2}(?:,\d{3})*"  # no leading zero
 PRICE_RE = re.compile(rf"^({_NUM}) for ({_NUM}) mesos$")  # matches layout.price_format

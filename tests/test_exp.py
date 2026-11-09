@@ -5,12 +5,12 @@ import cv2
 import numpy as np
 import pytest
 
-from mapletool.exp import (ExpReader, ExpTracker, StatusBarLocator, build_exp_box, exp_box_to_screen,
+from maplestory_classic_tool.exp import (ExpReader, ExpTracker, StatusBarLocator, build_exp_box, exp_box_to_screen,
                            format_amount, format_duration, load_statusbar, parse_exp)
-from mapletool.layout import base_family, crop_to_base, to_base
+from maplestory_classic_tool.layout import base_family, crop_to_base, to_base
 
 ROOT = Path(__file__).resolve().parents[1]
-ASSETS = ROOT / "mapletool" / "assets"
+ASSETS = ROOT / "maplestory_classic_tool" / "assets"
 SHOPS = ROOT / "tests" / "fixtures" / "shops"
 SB = load_statusbar(ASSETS / "layout.json")
 TRUTH = {"noshop_npc": (170, 0.06), "windowed1600_shop": (134202, 50.32), "windowed1600_stars": (134202, 50.32)}
@@ -286,7 +286,7 @@ def test_glyph_reader_other_16_9_client_sizes(size):
 
 
 def test_read_glyphs_unknown_or_unsure_gives_none():
-    from mapletool.exp import read_glyphs
+    from maplestory_classic_tool.exp import read_glyphs
     blank = np.full((12, 102, 3), 60, np.uint8)
     assert read_glyphs(blank) == ""
     blob = blank.copy()
@@ -296,7 +296,7 @@ def test_read_glyphs_unknown_or_unsure_gives_none():
 
 def test_read_glyphs_synthetic_eight():
     """No fixture shows an 8; its template follows the font's 0/3/9 strokes."""
-    from mapletool.exp import EXP_GLYPHS, GLYPH_TOP, read_glyphs
+    from maplestory_classic_tool.exp import EXP_GLYPHS, GLYPH_TOP, read_glyphs
     img = np.full((12, 40, 3), 60, np.uint8)
     x = 2
     for ch in "18":
@@ -324,7 +324,7 @@ def test_reader_unparsable_text_keeps_anchor():
 
 
 try:
-    from mapletool.fallback_ocr import WindowsOcr
+    from maplestory_classic_tool.fallback_ocr import WindowsOcr
     _OCR = WindowsOcr.create()
 except Exception:  # noqa: BLE001
     _OCR = None
@@ -335,7 +335,7 @@ except Exception:  # noqa: BLE001
 def test_windows_ocr_fallback_reads_fixture_exp(name):
     """The OCR fallback alone (the pixel-font reader bypassed) on the binarised crop: the right value or
     nothing (shop8's "151,688 [56.88%]" comes back as "ISI SS.88%", which the parser rejects), never a wrong one."""
-    from mapletool.exp import exp_ink
+    from maplestory_classic_tool.exp import exp_ink
     img, base, gray = fixture(name)
     anchor = locator().locate(gray)
     x, y, w, h = SB.exp_text_box
@@ -362,7 +362,7 @@ def test_exp_box_covers_the_lv_box_and_name_panel():
 
 
 def test_exp_box_meso_line():
-    from mapletool.exp import EXP_SUB, EXP_VALUE, MesoLine
+    from maplestory_classic_tool.exp import EXP_SUB, EXP_VALUE, MesoLine
     tr = ExpTracker()
     box = build_exp_box((286, 735), SB, tr, now=0, meso=MesoLine(True, 452_000, 45_300))
     assert box.lines[2] == (("Meso/h ", box.lines[0][0][1]), ("452K", EXP_VALUE))
@@ -414,8 +414,8 @@ def test_exp_box_to_screen_scales():
 
 
 def test_exp_prims_style_and_segments():
-    from mapletool import draw
-    from mapletool.exp import BAR_BOTTOM, BAR_TOP, EXP_LABEL, EXP_SUB, EXP_VALUE, exp_prims
+    from maplestory_classic_tool import draw
+    from maplestory_classic_tool.exp import BAR_BOTTOM, BAR_TOP, EXP_LABEL, EXP_SUB, EXP_VALUE, exp_prims
     tr = ExpTracker()
     sample(tr, 0, 100_000)
     sample(tr, 30, 110_000)
@@ -438,8 +438,8 @@ def test_exp_prims_style_and_segments():
 
 
 def test_exp_prims_drop_tail_that_does_not_fit():
-    from mapletool import draw
-    from mapletool.exp import exp_prims
+    from maplestory_classic_tool import draw
+    from maplestory_classic_tool.exp import exp_prims
     tr = ExpTracker()
     sample(tr, 0, 100_000)
     sample(tr, 30, 110_000)
@@ -516,7 +516,7 @@ def test_rate_after_idle_counts_active_time_only():
 
 
 def _eight(rows):
-    from mapletool.exp import EXP_GLYPHS, GLYPH_TOP
+    from maplestory_classic_tool.exp import EXP_GLYPHS, GLYPH_TOP
     img = np.full((12, 40, 3), 60, np.uint8)
     x = 2
     for pattern in (EXP_GLYPHS["1"], rows):
@@ -534,25 +534,25 @@ def _eight(rows):
     ("pinched", (".###.", "#...#", ".#.#.", "..#..", ".#.#.", "#...#", ".###.")),
 ])
 def test_off_pattern_eights_are_never_read_as_another_digit(name, rows):
-    from mapletool.exp import read_glyphs
+    from maplestory_classic_tool.exp import read_glyphs
     got = read_glyphs(_eight(rows))
     assert got in (None, "18"), (name, got)
 
 
 def test_glyph_min_score_keeps_every_fixture_glyph():
-    from mapletool.exp import GLYPH_MIN_SCORE
+    from maplestory_classic_tool.exp import GLYPH_MIN_SCORE
     assert GLYPH_MIN_SCORE == 0.75  # real fixture glyphs score >= 0.879
 
 
 def test_first_glyph_eight_crop_is_saved_once(tmp_path, caplog):
-    from mapletool import exp as expmod
+    from maplestory_classic_tool import exp as expmod
     img, base, gray = fixture("shop2")
     r = ExpReader(locator(), SB, None, sample_dir=tmp_path)
     calls = []
     real = expmod.read_glyphs
     try:
         expmod.read_glyphs = lambda bgr: calls.append(1) or "18 0.08%"
-        with caplog.at_level("INFO", logger="mapletool"):
+        with caplog.at_level("INFO", logger="maplestory_classic_tool"):
             first = r.read(gray, lambda box: crop_to_base(img, base, box))
         out = tmp_path / "exp_glyph_8.png"
         assert (first.exp, first.pct) == (18, 0.08) and out.exists()
@@ -572,8 +572,8 @@ def test_no_sample_saved_without_an_eight(tmp_path):
 
 
 def test_exp_lines_share_one_column_right_of_the_level():
-    from mapletool import draw
-    from mapletool.exp import exp_prims
+    from maplestory_classic_tool import draw
+    from maplestory_classic_tool.exp import exp_prims
     tr = ExpTracker()
     box = exp_box_to_screen(build_exp_box((286, 735), SB, tr, now=0), (0, 0), 2.0)
     box = type(box)(box.x, box.y, box.w, box.h, box.lines, box.scale, box.tails, "png", SB.level_box[2])

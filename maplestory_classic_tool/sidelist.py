@@ -7,8 +7,8 @@ from dataclasses import dataclass, field, replace
 
 import cv2
 
-from mapletool import draw
-from mapletool.catalog import name_key
+from maplestory_classic_tool import draw
+from maplestory_classic_tool.catalog import name_key
 
 PROFIT = "#3ddc84"  # summary-line colours (Panel.lines) and the overlay status text
 OTHER = "#b0b0b0"

@@ -5,9 +5,9 @@ import ctypes
 import logging
 import sys
 
-from mapletool.winutil import SingleInstance
+from maplestory_classic_tool.winutil import SingleInstance
 
-log = logging.getLogger("mapletool")
+log = logging.getLogger("maplestory_classic_tool")
 
 TITLE = "MapleStory Classic Tool"
 ALREADY_RUNNING = "MapleStory Classic Tool is already running."
@@ -67,10 +67,10 @@ def is_admin() -> bool:
 
 
 def relaunch_args() -> tuple[str, str]:
-    """(executable, parameters) that relaunch this app: frozen exe, or python -m mapletool --gui."""
+    """(executable, parameters) that relaunch this app: frozen exe, or python -m maplestory_classic_tool --gui."""
     if getattr(sys, "frozen", False):
         return sys.executable, ""
-    return sys.executable, "-m mapletool --gui"
+    return sys.executable, "-m maplestory_classic_tool --gui"
 
 
 def restart_as_admin() -> bool:
@@ -80,7 +80,7 @@ def restart_as_admin() -> bool:
 
 
 def icon_path():
-    from mapletool.live import ASSETS
+    from maplestory_classic_tool.live import ASSETS
     return ASSETS / "app.ico"
 
 
@@ -126,7 +126,7 @@ class ControlPanel:
     def __init__(self, root, session, admin: bool | None = None, instance=None, blocker=None):
         import tkinter as tk
 
-        from mapletool import gamewidgets as gw
+        from maplestory_classic_tool import gamewidgets as gw
 
         self.root = root
         self.session = session
@@ -206,7 +206,7 @@ class ControlPanel:
         except Exception:  # noqa: BLE001
             log.exception("start failed")
             from tkinter import messagebox
-            messagebox.showerror(TITLE, "Could not start scanning. See log.txt in %LOCALAPPDATA%\\MapleTool.")
+            messagebox.showerror(TITLE, "Could not start scanning. See log.txt in %LOCALAPPDATA%\\MapleStoryClassicTool.")
 
     def _off(self) -> None:
         self.session.stop()
@@ -246,7 +246,7 @@ class ControlPanel:
 
 
 def main() -> int:
-    from mapletool.live import _setup_logging, set_dpi_aware
+    from maplestory_classic_tool.live import _setup_logging, set_dpi_aware
     set_dpi_aware()
     _setup_logging()
     instance = SingleInstance()
@@ -256,10 +256,10 @@ def main() -> int:
         return 1
     import tkinter as tk
 
-    from mapletool.config import Settings, data_dir, load_settings
-    from mapletool.langhotkey import LangHotkeyBlocker
-    from mapletool.overlay import Overlay
-    from mapletool.session import LiveSession
+    from maplestory_classic_tool.config import Settings, data_dir, load_settings
+    from maplestory_classic_tool.langhotkey import LangHotkeyBlocker
+    from maplestory_classic_tool.overlay import Overlay
+    from maplestory_classic_tool.session import LiveSession
 
     root = tk.Tk()
     root.withdraw()  # no empty-window flash while widgets are built
@@ -290,7 +290,7 @@ def main() -> int:
     panel.alt_shift_var.set(checks["block_alt_shift"])
     root.update_idletasks()
     center_on_screen(root)
-    from mapletool.gamewidgets import set_app_window
+    from maplestory_classic_tool.gamewidgets import set_app_window
     set_app_window(root)  # borderless windows get no taskbar button by default
     root.deiconify()
     try:

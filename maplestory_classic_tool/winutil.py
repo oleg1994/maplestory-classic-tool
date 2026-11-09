@@ -5,7 +5,7 @@ import ctypes
 import logging
 from ctypes import wintypes
 
-log = logging.getLogger("mapletool")
+log = logging.getLogger("maplestory_classic_tool")
 
 MUTEX_NAME = "Local\\MapleStoryClassicTool"
 ERROR_ALREADY_EXISTS = 183

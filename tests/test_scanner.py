@@ -9,18 +9,18 @@ import cv2
 import numpy as np
 import pytest
 
-from mapletool.catalog import Catalog
-from mapletool.config import Settings
-from mapletool.detect import ShopLocator
-from mapletool.evaluate import annotations
-from mapletool.glyphs import GlyphSet
-from mapletool.layout import load_layout, to_base
-from mapletool.model import Item
-from mapletool.scanner import Scanner
+from maplestory_classic_tool.catalog import Catalog
+from maplestory_classic_tool.config import Settings
+from maplestory_classic_tool.detect import ShopLocator
+from maplestory_classic_tool.evaluate import annotations
+from maplestory_classic_tool.glyphs import GlyphSet
+from maplestory_classic_tool.layout import load_layout, to_base
+from maplestory_classic_tool.model import Item
+from maplestory_classic_tool.scanner import Scanner
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "shops"
-ASSETS = ROOT / "mapletool" / "assets"
+ASSETS = ROOT / "maplestory_classic_tool" / "assets"
 
 
 def _labels(n):
@@ -125,7 +125,7 @@ def test_fallback_policy(layout, anchor, glyphs, catalog, frame2):
     class EmptyGlyphs:
         """Glyph set that reads nothing: every box has unknown glyphs."""
         def read(self, ink):
-            from mapletool.glyphs import ReadResult
+            from maplestory_classic_tool.glyphs import ReadResult
             return ReadResult("", 3)
 
     fb = FakeOcr("Wolbi Throwing Stars", "1 for 3,000 mesos")
@@ -178,7 +178,7 @@ def test_cli_image_mode(tmp_path, catalog):
     catalog.save(cat_path)
     out = tmp_path / "out.png"
     proc = subprocess.run(
-        [sys.executable, "-m", "mapletool", "--image", str(FIXTURES / "shop2.png"),
+        [sys.executable, "-m", "maplestory_classic_tool", "--image", str(FIXTURES / "shop2.png"),
          "--out", str(out), "--show-all", "--catalog", str(cat_path)],
         capture_output=True, encoding="utf-8", cwd=ROOT, timeout=120)
     assert proc.returncode == 0, proc.stderr
@@ -200,7 +200,7 @@ class _ForcedPriceGlyphs:
     def read(self, ink):
         res = self.real.read(ink)
         if " for " in res.text:
-            from mapletool.glyphs import ReadResult
+            from maplestory_classic_tool.glyphs import ReadResult
             return ReadResult(self.price_text, 1)
         return res
 
@@ -293,7 +293,7 @@ def test_glyphs_without_chars_fail_closed(layout, anchor, glyphs, frame2):
         def read(self, ink):
             res = self.real.read(ink)
             if " for " in res.text:
-                from mapletool.glyphs import ReadResult
+                from maplestory_classic_tool.glyphs import ReadResult
                 return ReadResult("1 for ?,000 mesos", 1)
             return res
 
@@ -341,7 +341,7 @@ def test_resized_capture_confirms_1366_and_reads_same_rows(layout, anchor, glyph
     """A 16:9 client of another size: the resolver probes, confirms (1366, 768), same rows read."""
     import queue
 
-    from mapletool.live import LiveLoop
+    from maplestory_classic_tool.live import LiveLoop
 
     full = cv2.resize(cv2.imread(str(FIXTURES / "shop2.png"), cv2.IMREAD_GRAYSCALE), size,
                       interpolation=cv2.INTER_AREA)
@@ -379,7 +379,7 @@ def test_cli_image_mode_draws_side_panel(tmp_path, catalog, size):
     catalog.save(cat_path)
     out = tmp_path / "out.png"
     proc = subprocess.run(
-        [sys.executable, "-m", "mapletool", "--image", str(src), "--out", str(out), "--catalog", str(cat_path)],
+        [sys.executable, "-m", "maplestory_classic_tool", "--image", str(src), "--out", str(out), "--catalog", str(cat_path)],
         capture_output=True, encoding="utf-8", cwd=ROOT, timeout=120, env=dict(__import__("os").environ,
                                                                        LOCALAPPDATA=str(tmp_path)))
     assert proc.returncode == 0, proc.stderr
@@ -391,15 +391,15 @@ def test_cli_image_mode_draws_side_panel(tmp_path, catalog, size):
     x, y = round((422 - 8 - 10) * scale), round((152 + 4 + 9) * scale)
     assert tuple(int(c) for c in res[y, x]) == (0xff, 0xff, 0xff)
     # the frame band above it is the shop frame's blue-grey
-    from mapletool.draw import bgr
-    from mapletool.sidelist import SHOP_FRAME
+    from maplestory_classic_tool.draw import bgr
+    from maplestory_classic_tool.sidelist import SHOP_FRAME
     assert tuple(int(c) for c in res[round((152 + 2.5) * scale), x]) == bgr(SHOP_FRAME)
 
 
 def _loop_on(full, layout, scanner, settings):
     import queue
 
-    from mapletool.live import LiveLoop
+    from maplestory_classic_tool.live import LiveLoop
     h, w = full.shape
     return LiveLoop(scanner, layout, settings, lambda t: (4229, 381, w, h), lambda r, b: to_base(full, b),
                     queue.Queue(), queue.Queue(), save_settings=lambda s: None)
@@ -407,7 +407,7 @@ def _loop_on(full, layout, scanner, settings):
 
 def test_windowed_2560x1600_confirms_1228_and_reads_rows(layout, anchor, glyphs, catalog):
     """Real 2560x1600 windowed capture: base is (1228, 768), not the 16:10 standard (1280, 800)."""
-    from mapletool.fallback_ocr import WindowsOcr
+    from maplestory_classic_tool.fallback_ocr import WindowsOcr
     data = json.loads((FIXTURES / "windowed1600_shop.json").read_text(encoding="utf-8"))
     full = cv2.imread(str(FIXTURES / "windowed1600_shop.png"), cv2.IMREAD_GRAYSCALE)
     assert (full.shape[1], full.shape[0]) == tuple(data["client_size"]) == (2560, 1600)
@@ -425,7 +425,7 @@ def test_windowed_2560x1600_confirms_1228_and_reads_rows(layout, anchor, glyphs,
 
 def test_windowed_scores_pick_true_width(layout, anchor):
     """Measured neighbourhood: 1228 is the maximum of the family on the real capture."""
-    from mapletool.layout import base_family
+    from maplestory_classic_tool.layout import base_family
     full = cv2.imread(str(FIXTURES / "windowed1600_shop.png"), cv2.IMREAD_GRAYSCALE)
     loc = ShopLocator(anchor)
     scores = {b: loc.score(to_base(full, b)) for b in base_family(2560, 1600) + [(1280, 800)]}
@@ -446,10 +446,10 @@ def test_4k_shop2_confirms_1366(layout, anchor, glyphs, catalog):
 def test_cli_image_mode_windowed_capture(tmp_path, catalog):
     cat_path = tmp_path / "catalog.json"
     catalog.save(cat_path)
-    (tmp_path / "mapletool").mkdir()
-    (tmp_path / "mapletool" / "settings.json").write_text('{"base_sizes": {}}', encoding="utf-8")  # no seed
+    (tmp_path / "maplestory_classic_tool").mkdir()
+    (tmp_path / "maplestory_classic_tool" / "settings.json").write_text('{"base_sizes": {}}', encoding="utf-8")  # no seed
     proc = subprocess.run(
-        [sys.executable, "-m", "mapletool", "--image", str(FIXTURES / "windowed1600_shop.png"),
+        [sys.executable, "-m", "maplestory_classic_tool", "--image", str(FIXTURES / "windowed1600_shop.png"),
          "--catalog", str(cat_path)], capture_output=True, encoding="utf-8", cwd=ROOT, timeout=120,
         env=dict(__import__("os").environ, LOCALAPPDATA=str(tmp_path)))
     assert proc.returncode == 0, proc.stderr
@@ -495,7 +495,7 @@ class _ForcedNameGlyphs:
     def read(self, ink):
         res = self.real.read(ink)
         if res.text == "Wolbi Throwing Stars":
-            from mapletool.glyphs import ReadResult
+            from maplestory_classic_tool.glyphs import ReadResult
             return ReadResult("Wolbi Thr?wing Stars", 1)
         return res
 
@@ -547,7 +547,7 @@ class _CursorGlyphs:
         return self.real.chars() - {"8"}
 
     def read(self, ink):
-        from mapletool.glyphs import ReadResult
+        from maplestory_classic_tool.glyphs import ReadResult
         res = self.real.read(ink)
         if res.text == "Wolbi Throwing Stars":
             return ReadResult("Wolbi Throwing Stars ??", 2)
@@ -596,10 +596,10 @@ def test_cli_image_mode_stars_panel_has_icons(tmp_path):
     cat_path = tmp_path / "catalog.json"
     STARS_CAT.save(cat_path)
     out = tmp_path / "out.png"
-    (tmp_path / "mapletool").mkdir()
-    (tmp_path / "mapletool" / "settings.json").write_text('{"base_sizes": {}}', encoding="utf-8")
+    (tmp_path / "maplestory_classic_tool").mkdir()
+    (tmp_path / "maplestory_classic_tool" / "settings.json").write_text('{"base_sizes": {}}', encoding="utf-8")
     proc = subprocess.run(
-        [sys.executable, "-m", "mapletool", "--image", str(FIXTURES / "windowed1600_stars.png"), "--out", str(out),
+        [sys.executable, "-m", "maplestory_classic_tool", "--image", str(FIXTURES / "windowed1600_stars.png"), "--out", str(out),
          "--show-all", "--catalog", str(cat_path)], capture_output=True, encoding="utf-8", cwd=ROOT, timeout=120,
         env=dict(__import__("os").environ, LOCALAPPDATA=str(tmp_path)))
     assert proc.returncode == 0, proc.stderr
@@ -620,7 +620,7 @@ def test_cli_image_mode_stars_panel_has_icons(tmp_path):
 
 def test_shop4_truncated_axe_scroll_shows_ocr_text(layout, anchor, glyphs):
     """shop4 row 3 "Two-handed Axe Attack S..." matches four same-price tiers: shown as read."""
-    from mapletool.sidelist import ShopListing
+    from maplestory_classic_tool.sidelist import ShopListing
     rows = [r for r in _labels(4) if isinstance(r, dict) and not r["name"].startswith("Two-handed")]
     tiers = ["Chaos", "Greater", "Intermediate", "Lesser"]
     cat = Catalog([Item(13 + i, f"Two-handed Axe Attack Scroll: {t}", 1) for i, t in enumerate(tiers)]
@@ -637,15 +637,15 @@ def test_shop4_truncated_axe_scroll_shows_ocr_text(layout, anchor, glyphs):
 
 
 def _narrow_panel(x, grow_left, w=60):
-    from mapletool.sidelist import Panel, PanelRow
+    from maplestory_classic_tool.sidelist import Panel, PanelRow
     row = PanelRow("A Rather Long Item Name", "1 for 3,000 mesos", "+12,345", True,
                    "+12,345  A Rather Long Item Name  1 for 3,000")
     return Panel(x, 50, w, 90, "3 items · 1 deals", (row,), scale=2.0, row_h=34, grow_left=grow_left)
 
 
 def test_draw_panel_grows_left_keeping_the_shop_side_edge():
-    from mapletool.__main__ import draw_panel
-    from mapletool.draw import CvRenderer
+    from maplestory_classic_tool.__main__ import draw_panel
+    from maplestory_classic_tool.draw import CvRenderer
     img = np.zeros((300, 1600, 3), np.uint8)
     x, y, w, h = draw_panel(img, _narrow_panel(1000, True))
     assert x + w == 1060 and x < 1000  # right edge (towards the shop) fixed
@@ -657,7 +657,7 @@ def test_draw_panel_grows_left_keeping_the_shop_side_edge():
 
 
 def test_draw_panel_partly_outside_the_image_is_clipped():
-    from mapletool.__main__ import draw_panel
+    from maplestory_classic_tool.__main__ import draw_panel
     img = np.zeros((300, 400, 3), np.uint8)
     x, _, w, _ = draw_panel(img, _narrow_panel(100, True))
     assert x < 0 and x + w == 160  # right edge still fixed at 160; the rest is clipped, no error
@@ -669,10 +669,10 @@ def test_cli_image_panel_ends_before_shop_window(tmp_path, name, base, layout, a
     rows = json.loads((FIXTURES / f"{name}.json").read_text(encoding="utf-8"))["rows"]
     Catalog([Item(3000 + i, r["name"].rstrip("."), 1) for i, r in enumerate(rows)]
             + list(STARS_CAT.items), 0).save(cat_path)
-    (tmp_path / "mapletool").mkdir()
-    (tmp_path / "mapletool" / "settings.json").write_text('{"base_sizes": {}}', encoding="utf-8")
+    (tmp_path / "maplestory_classic_tool").mkdir()
+    (tmp_path / "maplestory_classic_tool" / "settings.json").write_text('{"base_sizes": {}}', encoding="utf-8")
     proc = subprocess.run(
-        [sys.executable, "-m", "mapletool", "--image", str(FIXTURES / f"{name}.png"), "--out", str(tmp_path / "o.png"),
+        [sys.executable, "-m", "maplestory_classic_tool", "--image", str(FIXTURES / f"{name}.png"), "--out", str(tmp_path / "o.png"),
          "--show-all", "--catalog", str(cat_path)], capture_output=True, encoding="utf-8", cwd=ROOT, timeout=120,
         env=dict(__import__("os").environ, LOCALAPPDATA=str(tmp_path)))
     assert proc.returncode == 0, proc.stderr

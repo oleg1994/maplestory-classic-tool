@@ -8,11 +8,11 @@ import tkinter.font as tkfont
 from collections import OrderedDict
 from dataclasses import dataclass
 
-from mapletool import draw
-from mapletool.exp import exp_prims
-from mapletool.sidelist import OTHER, PROFIT, panel_prims
+from maplestory_classic_tool import draw
+from maplestory_classic_tool.exp import exp_prims
+from maplestory_classic_tool.sidelist import OTHER, PROFIT, panel_prims
 
-log = logging.getLogger("mapletool")
+log = logging.getLogger("maplestory_classic_tool")
 
 KEY = "#010101"
 PHOTO_CACHE_MAX = 128  # decoded icon PhotoImages kept across redraws (keyed by their base64 PNG)

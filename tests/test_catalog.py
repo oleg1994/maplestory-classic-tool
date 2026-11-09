@@ -1,5 +1,5 @@
-from mapletool.catalog import Catalog, fetch_all, fold_il, normalize, sync
-from mapletool.model import Item, Match
+from maplestory_classic_tool.catalog import Catalog, fetch_all, fold_il, normalize, sync
+from maplestory_classic_tool.model import Item, Match
 
 
 def test_normalize():
@@ -60,7 +60,7 @@ def test_duplicate_names_use_min_price():
 def test_fetch_all_paginates_and_parses_string_stats(fake_session):
     items = fetch_all(fake_session)
     assert [(i.id, i.npc_price) for i in items] == [(1, 1), (270, 5), (9, 0)]
-    assert fake_session.calls[0][2]["User-Agent"] == "mapletool/0.1"
+    assert fake_session.calls[0][2]["User-Agent"] == "maplestory-classic-tool/0.1"
 
 
 def test_save_load_roundtrip(tmp_path):
@@ -183,7 +183,7 @@ def test_fetch_all_parses_rechargeable_and_slot_max():
     assert items[417] == Item(417, "Silver Ore", 80, False, 1)
     assert items[9].rechargeable and items[9].slot_max == 1000
     assert items[10].rechargeable and items[10].slot_max == 1
-    from mapletool.evaluate import npc_value
+    from maplestory_classic_tool.evaluate import npc_value
     assert npc_value(items[10], 700) == 7  # set size unknown: the whole listing is one set, never x qty
 
 

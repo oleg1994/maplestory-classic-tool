@@ -12,11 +12,11 @@ faulthandler.enable()
 from types import SimpleNamespace as NS
 import numpy as np
 import tkinter as tk
-from mapletool.live import build_scanner
-from mapletool.overlay import Overlay
-from mapletool.session import LiveSession
-from mapletool.sidelist import Panel, PanelRow
-from mapletool.exp import ExpBox
+from maplestory_classic_tool.live import build_scanner
+from maplestory_classic_tool.overlay import Overlay
+from maplestory_classic_tool.session import LiveSession
+from maplestory_classic_tool.sidelist import Panel, PanelRow
+from maplestory_classic_tool.exp import ExpBox
 
 Overlay.deiconify = lambda self: None  # tests never show the overlay window
 
@@ -57,7 +57,7 @@ overlay.show_panel(Panel(100, 100, 200, 60, "2 items · 1 deals", (row(),), scal
 texts = sorted(overlay.canvas.itemcget(i, "text") for i in overlay.canvas.find_withtag("lbl")
                if overlay.canvas.type(i) == "text")
 print("panel texts", texts, flush=True)
-from mapletool.sidelist import icon_png_b64
+from maplestory_classic_tool.sidelist import icon_png_b64
 png = icon_png_b64(np.full((35, 35, 3), 200, np.uint8), 2.0)
 overlay.show_panel(Panel(100, 100, 300, 100, "1 items · 1 deals", (row(png),), scale=2.0, row_h=40, icon_w=35))
 root.update()

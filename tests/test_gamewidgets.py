@@ -1,6 +1,6 @@
 import pytest
 
-from mapletool import gamewidgets as gw
+from maplestory_classic_tool import gamewidgets as gw
 
 
 @pytest.fixture

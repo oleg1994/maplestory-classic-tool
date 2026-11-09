@@ -1,6 +1,6 @@
 import threading
 
-from mapletool import hotkeys
+from maplestory_classic_tool import hotkeys
 
 
 def test_immediate_start_stop_leaves_no_thread(monkeypatch):

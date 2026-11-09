@@ -3,11 +3,11 @@ import time
 
 import numpy as np
 
-from mapletool.config import Settings
-from mapletool.evaluate import ScanResult
-from mapletool.model import Item, Listing, Verdict
-from mapletool.session import LiveSession
-from mapletool.sidelist import Panel
+from maplestory_classic_tool.config import Settings
+from maplestory_classic_tool.evaluate import ScanResult
+from maplestory_classic_tool.model import Item, Listing, Verdict
+from maplestory_classic_tool.session import LiveSession
+from maplestory_classic_tool.sidelist import Panel
 
 
 class FakeLayout:
@@ -104,13 +104,13 @@ class FakeExpReader:
     def __init__(self, ocr):
         from pathlib import Path
 
-        from mapletool.exp import load_statusbar
+        from maplestory_classic_tool.exp import load_statusbar
         self.ocr = ocr
-        self.layout = load_statusbar(Path(__file__).resolve().parents[1] / "mapletool" / "assets" / "layout.json")
+        self.layout = load_statusbar(Path(__file__).resolve().parents[1] / "maplestory_classic_tool" / "assets" / "layout.json")
         self.reads = 0
 
     def read(self, gray, crop):
-        from mapletool.exp import ExpReading
+        from maplestory_classic_tool.exp import ExpReading
         self.reads += 1
         return ExpReading((286, 735), 134_202, 50.32)
 
@@ -321,7 +321,7 @@ def test_start_after_close_rebuilds():
 
 
 def test_build_registers_atexit_close(monkeypatch):
-    import mapletool.session as session_mod
+    import maplestory_classic_tool.session as session_mod
     registered = []
     monkeypatch.setattr(session_mod.atexit, "register", lambda fn: registered.append(fn))
     s, *_ = make()
@@ -346,7 +346,7 @@ def test_base_confirmation_is_saved(tmp_path):
 
 def test_memory_logged_at_start_and_stop(caplog):
     s, *_ = make()
-    with caplog.at_level("INFO", logger="mapletool"):
+    with caplog.at_level("INFO", logger="maplestory_classic_tool"):
         s.start()
         s.stop()
     msgs = [r.getMessage() for r in caplog.records]
@@ -356,7 +356,7 @@ def test_memory_logged_at_start_and_stop(caplog):
 
 
 def test_close_keeps_resources_when_worker_will_not_join(monkeypatch):
-    import mapletool.session as session_mod
+    import maplestory_classic_tool.session as session_mod
     monkeypatch.setattr(session_mod, "JOIN_TIMEOUT", 0.05)
     gate = threading.Event()
 
@@ -442,7 +442,7 @@ def test_set_exp_tracker_while_off_does_not_build(tmp_path):
     s, sc, st, ov, builds, saved = make(settings_path=tmp_path / "settings.json")
     s.set_exp_tracker(False)
     assert builds == [] and len(saved) == 1 and not s.running
-    from mapletool.config import load_settings
+    from maplestory_classic_tool.config import load_settings
     assert load_settings(tmp_path / "settings.json").exp_tracker is True  # the fake save did not write
 
 

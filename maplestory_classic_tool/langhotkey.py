@@ -1,4 +1,4 @@
-"""Turn off Windows' Alt+Shift input-language shortcut while MapleTool is open (MapleStory players press
+"""Turn off Windows' Alt+Shift input-language shortcut while MapleStory Classic Tool is open (MapleStory players press
 Alt+Shift a lot). It never looks at the game: it changes the user's own hotkey setting
 (HKCU\\Keyboard Layout\\Toggle, the "Input language hot keys" dialog) and asks Windows to reload it.
 Win+Space still switches languages.
@@ -14,7 +14,7 @@ import json
 import logging
 from pathlib import Path
 
-log = logging.getLogger("mapletool")
+log = logging.getLogger("maplestory_classic_tool")
 
 KEY = r"Keyboard Layout\Toggle"
 LANGUAGE = ("Language Hotkey", "Hotkey")  # "Hotkey" is the legacy copy of "Language Hotkey"
@@ -86,7 +86,7 @@ class LangHotkeyBlocker:
         for name, value in changes.items():
             self.reg.set(name, value)
         self.reg.apply()
-        log.info("Alt+Shift language shortcut turned off while MapleTool is open")
+        log.info("Alt+Shift language shortcut turned off while MapleStory Classic Tool is open")
         return True
 
     def restore(self) -> bool:

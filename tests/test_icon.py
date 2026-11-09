@@ -1,6 +1,6 @@
 import struct
 
-from mapletool.panel import icon_path
+from maplestory_classic_tool.panel import icon_path
 
 
 def test_app_icon_has_small_and_large_png_entries():
@@ -18,5 +18,5 @@ def test_app_icon_has_small_and_large_png_entries():
 
 def test_spec_builds_maple_tool_with_the_icon():
     from pathlib import Path
-    spec = (Path(__file__).resolve().parents[1] / "packaging" / "MapleTool.spec").read_text(encoding="utf-8")
-    assert 'name="MapleTool"' in spec and "app.ico" in spec
+    spec = (Path(__file__).resolve().parents[1] / "packaging" / "MapleStoryClassicTool.spec").read_text(encoding="utf-8")
+    assert 'name="MapleStoryClassicTool"' in spec and "app.ico" in spec

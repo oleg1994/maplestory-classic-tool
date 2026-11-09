@@ -3,12 +3,12 @@ import argparse
 
 import cv2
 
-from mapletool.draw import CvRenderer
-from mapletool.exp import ExpTracker, MesoLine, build_exp_box, exp_box_to_screen, exp_prims
-from mapletool.fallback_ocr import WindowsOcr
-from mapletool.layout import CONFIRM_MIN, BaseResolver, best_score, crop_to_base, to_base
-from mapletool.live import build_exp_reader, build_meso_reader, build_scanner, run_live, selftest
-from mapletool.sidelist import ShopListing, build_panel, panel_prims, panel_to_screen
+from maplestory_classic_tool.draw import CvRenderer
+from maplestory_classic_tool.exp import ExpTracker, MesoLine, build_exp_box, exp_box_to_screen, exp_prims
+from maplestory_classic_tool.fallback_ocr import WindowsOcr
+from maplestory_classic_tool.layout import CONFIRM_MIN, BaseResolver, best_score, crop_to_base, to_base
+from maplestory_classic_tool.live import build_exp_reader, build_meso_reader, build_scanner, run_live, selftest
+from maplestory_classic_tool.sidelist import ShopListing, build_panel, panel_prims, panel_to_screen
 
 
 def scan_any_base(scanner, gray_full, base_sizes):
@@ -131,7 +131,7 @@ def run_image(args) -> int:
 
 
 def main(argv=None) -> int:
-    p = argparse.ArgumentParser(prog="mapletool")
+    p = argparse.ArgumentParser(prog="maplestory_classic_tool")
     p.add_argument("--image")
     p.add_argument("--out")
     p.add_argument("--show-all", action="store_true")
@@ -145,7 +145,7 @@ def main(argv=None) -> int:
     if args.image:
         return run_image(args)
     if args.gui:
-        from mapletool.panel import main as gui_main
+        from maplestory_classic_tool.panel import main as gui_main
         return gui_main()
     return run_live()
 

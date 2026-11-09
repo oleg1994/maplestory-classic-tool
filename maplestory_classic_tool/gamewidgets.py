@@ -12,7 +12,7 @@ import struct
 import tkinter as tk
 from pathlib import Path
 
-from mapletool.sidelist import (DEAL_BADGE, DEAL_BADGE_EDGE, SHOP_EDGE, SHOP_FRAME, SHOP_FRAME_HI,
+from maplestory_classic_tool.sidelist import (DEAL_BADGE, DEAL_BADGE_EDGE, SHOP_EDGE, SHOP_FRAME, SHOP_FRAME_HI,
                                 SHOP_LIST_EDGE, SHOP_ROW_BG, SHOP_ROW_LINE, SHOP_TEXT,
                                 SHOP_TITLE_BG, SHOP_TITLE_EDGE)
 

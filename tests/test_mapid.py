@@ -4,11 +4,11 @@ import cv2
 import numpy as np
 import pytest
 
-from mapletool.mapid import MAP_RESET_S, MapId, MapWatch, MinimapReader
+from maplestory_classic_tool.mapid import MAP_RESET_S, MapId, MapWatch, MinimapReader
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "shops"
-ASSETS = ROOT / "mapletool" / "assets"
+ASSETS = ROOT / "maplestory_classic_tool" / "assets"
 BASES = {"windowed1600_shop": (1228, 768), "windowed1600_stars": (1228, 768)}
 
 
@@ -108,7 +108,7 @@ def test_watch_never_resets_without_a_minimap():
 
 
 def test_found_position_is_reused_cheaply(monkeypatch):
-    import mapletool.mapid as mapid
+    import maplestory_classic_tool.mapid as mapid
     r = reader()
     g = frame("shop2")
     r.read(g)

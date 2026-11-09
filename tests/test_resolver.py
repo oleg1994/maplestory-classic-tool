@@ -1,4 +1,4 @@
-from mapletool.layout import CONFIRM_MIN, HEAL_MARGIN, BaseResolver, base_candidates, base_family
+from maplestory_classic_tool.layout import CONFIRM_MIN, HEAL_MARGIN, BaseResolver, base_candidates, base_family
 
 
 def test_family_768_even_width():

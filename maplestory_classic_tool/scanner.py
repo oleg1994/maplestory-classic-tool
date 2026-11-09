@@ -3,9 +3,9 @@ import logging
 
 import numpy as np
 
-from mapletool.evaluate import ScanResult, evaluate
-from mapletool.glyphs import glyph_key
-from mapletool.shop import agrees_with_glyphs, name_agrees, parse_price, row_inks, to_listing
+from maplestory_classic_tool.evaluate import ScanResult, evaluate
+from maplestory_classic_tool.glyphs import glyph_key
+from maplestory_classic_tool.shop import agrees_with_glyphs, name_agrees, parse_price, row_inks, to_listing
 
 CACHE_MAX = 4096
 ID_INK_GRAY = 128  # binarize identity boxes (dark text on the white title bar, light text on the dark name box)

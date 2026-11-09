@@ -7,22 +7,23 @@ import re
 from dataclasses import asdict, dataclass, field, fields
 from pathlib import Path
 
-log = logging.getLogger("mapletool")
+log = logging.getLogger("maplestory_classic_tool")
 
 
-DATA_DIR_NAME = "MapleTool"
-OLD_DATA_DIR_NAME = "fmoverlay"  # before the project was renamed
+DATA_DIR_NAME = "MapleStoryClassicTool"
+OLD_DATA_DIR_NAMES = ("MapleTool", "fmoverlay")  # earlier names of the folder, newest first
 
 
 def data_dir() -> Path:
     base = Path(os.environ.get("LOCALAPPDATA") or str(Path.home() / "AppData" / "Local"))
     d = base / DATA_DIR_NAME
-    old = base / OLD_DATA_DIR_NAME
-    if not d.exists() and old.is_dir():
-        try:
-            old.rename(d)  # keep settings, the catalog cache and a pending language-hotkey backup
-        except OSError:
-            return old  # in use (an old copy still running): keep using it this time
+    if not d.exists():
+        old = next((base / n for n in OLD_DATA_DIR_NAMES if (base / n).is_dir()), None)
+        if old is not None:
+            try:
+                old.rename(d)  # keep settings, the catalog cache and a pending language-hotkey backup
+            except OSError:
+                return old  # in use (an old copy still running): keep using it this time
     d.mkdir(parents=True, exist_ok=True)
     return d
 
@@ -34,7 +35,7 @@ class Settings:
     min_profit: int = 1
     show_all: bool = False
     exp_tracker: bool = True  # EXP/hour + time-to-level box above the status bar
-    block_alt_shift: bool = True  # Windows' Alt+Shift language shortcut off while MapleTool is open
+    block_alt_shift: bool = True  # Windows' Alt+Shift language shortcut off while MapleStory Classic Tool is open
     catalog_max_age_days: int = 7
     hotkey_scan: str = "F8"
     hotkey_clear: str = "F9"

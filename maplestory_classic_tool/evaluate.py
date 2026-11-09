@@ -1,9 +1,9 @@
 """Verdicts and overlay annotations."""
 from dataclasses import dataclass
 
-from mapletool.catalog import Catalog
-from mapletool.layout import Layout
-from mapletool.model import Annotation, Listing, Verdict
+from maplestory_classic_tool.catalog import Catalog
+from maplestory_classic_tool.layout import Layout
+from maplestory_classic_tool.model import Annotation, Listing, Verdict
 
 
 @dataclass

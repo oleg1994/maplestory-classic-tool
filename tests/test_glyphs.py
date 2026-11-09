@@ -4,7 +4,7 @@ import time
 import numpy as np
 import pytest
 
-from mapletool.glyphs import GlyphSet, ReadResult, binarize, column_runs, glyph_key
+from maplestory_classic_tool.glyphs import GlyphSet, ReadResult, binarize, column_runs, glyph_key
 
 _SHAPES = {
     "a": ["111", "101", "111", "101", "101"],

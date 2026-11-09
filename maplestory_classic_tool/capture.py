@@ -9,7 +9,7 @@ from ctypes import wintypes
 import cv2
 import numpy as np
 
-from mapletool.layout import crop_to_base, to_base
+from maplestory_classic_tool.layout import crop_to_base, to_base
 
 log = logging.getLogger(__name__)
 

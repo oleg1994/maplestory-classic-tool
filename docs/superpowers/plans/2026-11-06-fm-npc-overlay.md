@@ -4,7 +4,7 @@
 
 **Goal:** Windows overlay that reads MapleStory Classic player-shop windows from the screen and labels every listing an NPC would buy for more than its asking price.
 
-**Architecture:** Python package `mapletool`. Pipeline per frame: capture game client → locate shop anchor (cached) → slice fixed row grid → read each text box with an exact-match glyph-template OCR (Windows OCR fallback for unknown glyphs) → parse qty/price → match name against a cached MeowDB catalog → compute NPC profit → draw labels on a click-through topmost tkinter overlay. Every stage is a pure function over numpy arrays, so the whole pipeline runs offline on fixture screenshots.
+**Architecture:** Python package `maplestory_classic_tool`. Pipeline per frame: capture game client → locate shop anchor (cached) → slice fixed row grid → read each text box with an exact-match glyph-template OCR (Windows OCR fallback for unknown glyphs) → parse qty/price → match name against a cached MeowDB catalog → compute NPC profit → draw labels on a click-through topmost tkinter overlay. Every stage is a pure function over numpy arrays, so the whole pipeline runs offline on fixture screenshots.
 
 **Tech Stack:** Python ≥3.10, numpy, opencv-python, rapidfuzz, requests, dxcam (mss fallback), winrt Windows.Media.Ocr, tkinter, ctypes (Win32), pytest.
 
@@ -16,8 +16,8 @@
 - Python ≥3.10 (user machine has 3.10.5). No syntax newer than 3.10.
 - Perf budget: changed shop read+evaluate < 5 ms CPU; unchanged frame < 1 ms (capture excluded).
 - MeowDB base URL `https://meowdb.com/msclassic/api`; bulk list `GET /items?limit=500&page=N` until `hasMore` is false; NPC unit price = `int(stats["price"])`, where `stats` may be a dict or a JSON string; missing → 0.
-- HTTP User-Agent `mapletool/0.1`. Never send user email or identity anywhere.
-- User data dir `%LOCALAPPDATA%\mapletool` (settings.json, catalog.json, log.txt). Catalog refresh age: 7 days.
+- HTTP User-Agent `maplestory_classic_tool/0.1`. Never send user email or identity anywhere.
+- User data dir `%LOCALAPPDATA%\maplestory_classic_tool` (settings.json, catalog.json, log.txt). Catalog refresh age: 7 days.
 - Flag rule: `profit = npc_price * qty - price`; flag when `profit >= min_profit` (default 1). Uncertain reads and unmatched names are never flagged.
 - Name match: exact normalized → truncated prefix → `rapidfuzz.fuzz.ratio` cutoff 90.
 - Hotkeys: F8 force rescan, F9 clear. Poll rate 10 Hz.
@@ -49,7 +49,7 @@
 ```
 pyproject.toml                 # deps, pytest config (markers: perf, live)
 README.md                      # usage, admin note, calibration how-to
-mapletool/
+maplestory_classic_tool/
   __init__.py
   __main__.py                  # CLI: live mode, --image offline mode
   model.py                     # shared dataclasses
@@ -78,7 +78,7 @@ tests/
 ### Task 1: Scaffold, models, settings, catalog
 
 **Files:**
-- Create: `pyproject.toml`, `.gitignore`, `mapletool/__init__.py`, `mapletool/model.py`, `mapletool/config.py`, `mapletool/catalog.py`
+- Create: `pyproject.toml`, `.gitignore`, `maplestory_classic_tool/__init__.py`, `maplestory_classic_tool/model.py`, `maplestory_classic_tool/config.py`, `maplestory_classic_tool/catalog.py`
 - Test: `tests/test_catalog.py`
 
 **Interfaces:**
@@ -88,10 +88,10 @@ tests/
   - `Listing(row: int, name: str, qty: int | None, price: int | None, uncertain: bool)`
   - `Verdict(listing: Listing, item: Item | None, npc_total: int | None, profit: int | None, status: Literal["profit","no_profit","unknown"])`
   - `Annotation(row: int, x: int, y: int, text: str, status: str)` — x,y in game-client pixel coords
-- Produces (`config.py`): `data_dir() -> Path` (creates `%LOCALAPPDATA%\mapletool`); `Settings` dataclass with `window_title="MapleStory"`, `poll_hz=10`, `min_profit=1`, `show_all=False`, `catalog_max_age_days=7`, `hotkey_scan="F8"`, `hotkey_clear="F9"`; `load_settings(path: Path) -> Settings` (writes defaults if missing, ignores unknown keys); `save_settings(s: Settings, path: Path) -> None`.
+- Produces (`config.py`): `data_dir() -> Path` (creates `%LOCALAPPDATA%\maplestory_classic_tool`); `Settings` dataclass with `window_title="MapleStory"`, `poll_hz=10`, `min_profit=1`, `show_all=False`, `catalog_max_age_days=7`, `hotkey_scan="F8"`, `hotkey_clear="F9"`; `load_settings(path: Path) -> Settings` (writes defaults if missing, ignores unknown keys); `save_settings(s: Settings, path: Path) -> None`.
 - Produces (`catalog.py`): `API = "https://meowdb.com/msclassic/api"`; `normalize(name: str) -> str`; `class Catalog` with `Catalog(items: list[Item], fetched_at: float)`, `Catalog.load(path: Path) -> Catalog` (empty catalog, `fetched_at=0`, if file missing/corrupt), `save(path: Path) -> None`, `is_stale(max_age_days: int, now: float) -> bool`, `lookup(text: str) -> Match | None`, `__len__`; `fetch_all(session: requests.Session) -> list[Item]`; `sync(path: Path, session: requests.Session) -> Catalog` (fetch, save, return; on any exception return `Catalog.load(path)`).
 
-- [ ] **Step 1: Scaffold.** `git init`; `pyproject.toml` (project `mapletool`, `requires-python = ">=3.10"`, deps: `numpy`, `opencv-python`, `rapidfuzz`, `requests`, `dxcam`, `mss`, `winrt-runtime`, `winrt-Windows.Media.Ocr`, `winrt-Windows.Graphics.Imaging`, `winrt-Windows.Storage.Streams`, `winrt-Windows.Globalization`; dev: `pytest`; `[tool.pytest.ini_options] markers = ["perf: timing budget", "live: needs running game"]`, `addopts = "-m 'not live'"`). `.gitignore`: `__pycache__/`, `.venv/`, `*.egg-info/`, `dbg*.png`. Create venv and `pip install -e .[dev]`.
+- [ ] **Step 1: Scaffold.** `git init`; `pyproject.toml` (project `maplestory_classic_tool`, `requires-python = ">=3.10"`, deps: `numpy`, `opencv-python`, `rapidfuzz`, `requests`, `dxcam`, `mss`, `winrt-runtime`, `winrt-Windows.Media.Ocr`, `winrt-Windows.Graphics.Imaging`, `winrt-Windows.Storage.Streams`, `winrt-Windows.Globalization`; dev: `pytest`; `[tool.pytest.ini_options] markers = ["perf: timing budget", "live: needs running game"]`, `addopts = "-m 'not live'"`). `.gitignore`: `__pycache__/`, `.venv/`, `*.egg-info/`, `dbg*.png`. Create venv and `pip install -e .[dev]`.
 
 - [ ] **Step 2: Write failing tests in `tests/test_catalog.py`**
 
@@ -148,7 +148,7 @@ def test_is_stale():
 
 - [ ] **Step 4: Implement** `model.py`, `config.py`, `catalog.py` per Interfaces. `normalize`: lowercase, `re.sub(r"[^a-z0-9]+", " ", ...)`, strip. Lookup keys: dict `normalized → Item` built once, duplicates keep min `npc_price`. Truncation detected by text ending in `..` (strip trailing dots, normalize, `startswith` over keys; unique item or all candidates share one npc_price → match). Fuzzy: `rapidfuzz.process.extractOne(norm, keys, scorer=fuzz.ratio, score_cutoff=90)`. `fetch_all`: `GET {API}/items` with `params={"limit": 500, "page": n}`, `timeout=15`, header UA. Cache JSON: `{"fetched_at": float, "items": [[id, name, npc_price], ...]}`.
 
-- [ ] **Step 5: Run** `pytest tests/test_catalog.py -v` → all PASS. Then live smoke (not a test): `python -c "import requests;from mapletool.catalog import *;print(len(fetch_all(requests.Session())))"` → prints several thousand items, no error.
+- [ ] **Step 5: Run** `pytest tests/test_catalog.py -v` → all PASS. Then live smoke (not a test): `python -c "import requests;from maplestory_classic_tool.catalog import *;print(len(fetch_all(requests.Session())))"` → prints several thousand items, no error.
 
 - [ ] **Step 6: Commit** `git add -A && git commit -m "feat: scaffold, models, settings, MeowDB catalog"`
 
@@ -157,7 +157,7 @@ def test_is_stale():
 ### Task 2: Glyph-template OCR engine
 
 **Files:**
-- Create: `mapletool/glyphs.py`
+- Create: `maplestory_classic_tool/glyphs.py`
 - Test: `tests/test_glyphs.py`
 
 **Interfaces:**
@@ -220,7 +220,7 @@ def test_read_speed_line_under_200us():   # @pytest.mark.perf; 20-char line, med
 Needs the user. **Blocking step:** ask the user for 3–5 full-client screenshots (PNG, game's native resolution, no scaling) of open player shops: varied items, ≥1 row with qty > 1, ≥1 sold-out (grey) row, ≥1 long truncated name, one with a hovered/selected row. Plus one screenshot with no shop open.
 
 **Files:**
-- Create: `tests/fixtures/shops/*.png` + `*.json`, `mapletool/layout.py`, `mapletool/calibrate.py`, `mapletool/assets/anchor.png`, `mapletool/assets/layout.json`, `mapletool/assets/glyphs.json`
+- Create: `tests/fixtures/shops/*.png` + `*.json`, `maplestory_classic_tool/layout.py`, `maplestory_classic_tool/calibrate.py`, `maplestory_classic_tool/assets/anchor.png`, `maplestory_classic_tool/assets/layout.json`, `maplestory_classic_tool/assets/glyphs.json`
 - Test: `tests/test_calibrate.py`
 
 **Interfaces:**
@@ -229,8 +229,8 @@ Needs the user. **Blocking step:** ask the user for 3–5 full-client screenshot
   - Fixture label `<name>.json`: `{"shop": true, "rows": [{"name": str, "qty": int, "price": int} | null, ...]}` — one entry per visible grid row top-to-bottom, `null` for empty or sold-out rows. No-shop screenshot: `{"shop": false, "rows": []}`.
   - `Layout` dataclass (`layout.py`): `anchor_to_grid: tuple[int,int]`, `rows: int`, `row_pitch: int`, `name_box: tuple[int,int,int,int]`, `price_box: tuple[int,int,int,int]` (x, y, w, h relative to row origin), `ink_max_gray: int`, `label_dx: int`, `price_format: str`; `load_layout(path: Path) -> Layout`; method `Layout.row_origin(anchor_xy: tuple[int,int], row: int) -> tuple[int,int]` = `(ax + anchor_to_grid[0], ay + anchor_to_grid[1] + row * row_pitch)`.
   - `price_text(qty: int, price: int, fmt: str) -> str` in `calibrate.py`; default fmt `"{qty} for {price:,} mesos"` (reference implementation's format). If screenshots show another wording, change `price_format` in layout.json and Task 4's `PRICE_RE` to match.
-  - CLI: `python -m mapletool.calibrate build FIXTURE_DIR --out mapletool/assets/glyphs.json [--holdout NAME]` → prints `trained=<n> glyphs, holdout lines=<n>, wrong=<n>, unknown=<n>`; exits 1 if `wrong > 0`.
-  - CLI: `python -m mapletool.calibrate draw SHOT.png --out dbg.png` → draws anchor match, row boxes, name/price boxes.
+  - CLI: `python -m maplestory_classic_tool.calibrate build FIXTURE_DIR --out maplestory_classic_tool/assets/glyphs.json [--holdout NAME]` → prints `trained=<n> glyphs, holdout lines=<n>, wrong=<n>, unknown=<n>`; exits 1 if `wrong > 0`.
+  - CLI: `python -m maplestory_classic_tool.calibrate draw SHOT.png --out dbg.png` → draws anchor match, row boxes, name/price boxes.
 
 - [ ] **Step 1: Label fixtures.** Save screenshots to `tests/fixtures/shops/`; write each `.json` from what is visible (ask user to confirm the labels).
 - [ ] **Step 2: Measure geometry.** Crop the shop header into `assets/anchor.png` (≥ 60×12 px, static pixels only — no item text). Measure grid offsets/pitch/boxes and darkest grey of sold text vs. ink; set `ink_max_gray` between them (reference: ink ≈ 0, sold ≥ 160 → default 100). Write `assets/layout.json`.
@@ -245,7 +245,7 @@ def test_space_gap_between_intra_and_inter_word_gaps():  # max intra-word gap < 
 
 - [ ] **Step 4: Run** `pytest tests/test_calibrate.py -v` → FAIL.
 - [ ] **Step 5: Implement** `layout.py` and `calibrate.py`. Build: for each labelled row, binarize name/price boxes, take `column_runs`, compare against label chars with spaces removed; equal count → `GlyphSet.add` each; else skip + report. `space_gap` = `max_intra + 1` clamped to `<= min_inter`. Holdout evaluation: `wrong` = chars that read as a different non-`?` char.
-- [ ] **Step 6: Run** `python -m mapletool.calibrate draw tests/fixtures/shops/<first>.png --out dbg.png`, open `dbg.png`, confirm boxes sit on text. Then `python -m mapletool.calibrate build tests/fixtures/shops --out mapletool/assets/glyphs.json --holdout <last>` → `wrong=0`. Then rebuild without `--holdout` for the shipped set. Run `pytest tests/test_calibrate.py -v` → PASS.
+- [ ] **Step 6: Run** `python -m maplestory_classic_tool.calibrate draw tests/fixtures/shops/<first>.png --out dbg.png`, open `dbg.png`, confirm boxes sit on text. Then `python -m maplestory_classic_tool.calibrate build tests/fixtures/shops --out maplestory_classic_tool/assets/glyphs.json --holdout <last>` → `wrong=0`. Then rebuild without `--holdout` for the shipped set. Run `pytest tests/test_calibrate.py -v` → PASS.
 - [ ] **Step 7: Gate.** If `wrong > 0` cannot be fixed by tuning `ink_max_gray`/`tolerance` (font is anti-aliased and unstable), stop and report to the user: plan falls back to Windows OCR as primary (Task 5 module used for every row, still cached by `glyph_key`).
 - [ ] **Step 8: Commit** `git add -A && git commit -m "feat: shop fixtures, layout, glyph calibration"`
 
@@ -254,7 +254,7 @@ def test_space_gap_between_intra_and_inter_word_gaps():  # max intra-word gap < 
 ### Task 4: Shop locator and row parsing
 
 **Files:**
-- Create: `mapletool/detect.py`, `mapletool/shop.py`
+- Create: `maplestory_classic_tool/detect.py`, `maplestory_classic_tool/shop.py`
 - Test: `tests/test_shop.py`
 
 **Interfaces:**
@@ -293,7 +293,7 @@ def test_rows_read_match_labels():            # every fixture: glyphs.read on ro
 ### Task 5: Windows OCR fallback
 
 **Files:**
-- Create: `mapletool/fallback_ocr.py`
+- Create: `maplestory_classic_tool/fallback_ocr.py`
 - Test: `tests/test_fallback_ocr.py`
 
 **Interfaces:**
@@ -317,7 +317,7 @@ def test_blank_crop_returns_empty():
 ### Task 6: Evaluation, scanner pipeline, offline image mode
 
 **Files:**
-- Create: `mapletool/evaluate.py`, `mapletool/scanner.py`, `mapletool/__main__.py` (offline part)
+- Create: `maplestory_classic_tool/evaluate.py`, `maplestory_classic_tool/scanner.py`, `maplestory_classic_tool/__main__.py` (offline part)
 - Test: `tests/test_evaluate.py`, `tests/test_scanner.py`
 
 **Interfaces:**
@@ -329,7 +329,7 @@ def test_blank_crop_returns_empty():
     - Change detection: key = `(anchor, hash(grid_region.tobytes()))`; same as last → previous verdicts, `changed=False`.
     - Text cache: `dict[bytes, str]` keyed by `glyph_key(ink)`, cleared when > 4096 entries. Fallback called only when `GlyphSet.read(...).unknown > 0` and fallback exists; fallback text counts as `unknown=0` for name, and for price only if `parse_price` succeeds.
   - `annotations(result: ScanResult, layout: Layout, show_all: bool) -> list[Annotation]` — profit: `f"NPC +{profit:,}"`; with `show_all`: no_profit `f"NPC {npc_total:,}"`, unknown `"NPC ?"`. Position: `layout.row_origin(anchor, row)` + `(layout.label_dx, 0)`.
-  - CLI: `python -m mapletool --image SHOT.png --out OUT.png [--show-all]` → draws annotations with `cv2.putText` (green profit, grey others) and prints one line per verdict.
+  - CLI: `python -m maplestory_classic_tool --image SHOT.png --out OUT.png [--show-all]` → draws annotations with `cv2.putText` (green profit, grey others) and prints one line per verdict.
 
 - [ ] **Step 1: Write failing tests**
 
@@ -360,8 +360,8 @@ def test_cli_image_mode(tmp_path):    # subprocess run; OUT.png exists; stdout h
 ### Task 7: Live capture, overlay, hotkeys
 
 **Files:**
-- Create: `mapletool/capture.py`, `mapletool/overlay.py`, `mapletool/hotkeys.py`, `README.md`
-- Modify: `mapletool/__main__.py` (live branch)
+- Create: `maplestory_classic_tool/capture.py`, `maplestory_classic_tool/overlay.py`, `maplestory_classic_tool/hotkeys.py`, `README.md`
+- Modify: `maplestory_classic_tool/__main__.py` (live branch)
 - Test: `tests/test_live.py`
 
 **Interfaces:**
@@ -387,7 +387,7 @@ def test_live_end_to_end():          # game running with shop open: one scan ret
 ```
 
 - [ ] **Step 2: Run** `pytest tests/test_live.py -v` → FAIL.
-- [ ] **Step 3: Implement** per Interfaces. README: install, `python -m mapletool`, run as administrator if the game runs elevated (hotkeys), re-calibration after a game UI patch (Task 3 CLIs), MeowDB disclaimer, "reads the screen only".
+- [ ] **Step 3: Implement** per Interfaces. README: install, `python -m maplestory_classic_tool`, run as administrator if the game runs elevated (hotkeys), re-calibration after a game UI patch (Task 3 CLIs), MeowDB disclaimer, "reads the screen only".
 - [ ] **Step 4: Run** `pytest -v` → all PASS.
 - [ ] **Step 5: Manual verify with the user in game:** open a player shop → labels appear beside profitable rows within ~0.2 s; scroll the shop → labels follow; move the game window → labels follow; close shop → labels vanish; F9 clears; F8 rescans; Task Manager shows overlay CPU < 3% idle with shop open. Then `pytest -m live -v` → PASS.
 - [ ] **Step 6: Commit** `git add -A && git commit -m "feat: live capture, overlay, hotkeys"`

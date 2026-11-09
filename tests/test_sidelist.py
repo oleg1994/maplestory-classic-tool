@@ -1,7 +1,7 @@
-from mapletool.layout import Layout
-from mapletool.model import Item, Listing, Verdict
-from mapletool.overlay import OTHER, PROFIT
-from mapletool.sidelist import (ABSENT_CLEAR_S, CHAR_W, MAX_CHARS, MAX_ROWS, PANEL_GAP, ListedRow,
+from maplestory_classic_tool.layout import Layout
+from maplestory_classic_tool.model import Item, Listing, Verdict
+from maplestory_classic_tool.overlay import OTHER, PROFIT
+from maplestory_classic_tool.sidelist import (ABSENT_CLEAR_S, CHAR_W, MAX_CHARS, MAX_ROWS, PANEL_GAP, ListedRow,
                                 ShopListing, build_panel, panel_to_screen, row_text)
 
 LAYOUT = Layout(base_size=(1366, 768), anchor_to_grid=(-99, 95), rows=6, row_pitch=40,
@@ -324,7 +324,7 @@ def test_long_name_is_clipped_never_the_qty_price_tail():
 
 
 def test_observe_none_shop_id_is_ignored():
-    from mapletool.sidelist import ShopListing
+    from maplestory_classic_tool.sidelist import ShopListing
     listing = ShopListing()
     assert listing.observe(None, [], now=1.0) is False
 
@@ -337,7 +337,7 @@ import base64  # noqa: E402
 import cv2  # noqa: E402
 import numpy as np  # noqa: E402
 
-from mapletool.sidelist import (LIST_GAP, LIST_PAD, PAD, ROW_PITCH, ROW_PITCH_COMPACT,  # noqa: E402
+from maplestory_classic_tool.sidelist import (LIST_GAP, LIST_PAD, PAD, ROW_PITCH, ROW_PITCH_COMPACT,  # noqa: E402
                                 ROW_PITCH_TEXT, TITLE_H, panel_height)
 
 
@@ -366,7 +366,7 @@ def test_icon_votes_per_listing_key_and_unknown_rows_ignored():
 
 
 def test_icon_variants_are_capped():
-    from mapletool.sidelist import MAX_ICON_VARIANTS
+    from maplestory_classic_tool.sidelist import MAX_ICON_VARIANTS
     sl = ShopListing(min_seen=1)
     rows = [plain(0, "A", 10, 5)]
     sl.observe("s", rows, 0.0, icons={0: icon(7)})
@@ -441,8 +441,8 @@ def test_panel_to_screen_encodes_scaled_png_icons():
 # --- ambiguous truncated names (fix round 1) -------------------------------------------
 
 def _axe_verdicts():
-    from mapletool.catalog import Catalog
-    from mapletool.evaluate import evaluate
+    from maplestory_classic_tool.catalog import Catalog
+    from maplestory_classic_tool.evaluate import evaluate
     cat = Catalog([Item(13, "Two-handed Axe Attack Scroll: Chaos", 1),
                    Item(14, "Two-handed Axe Attack Scroll: Greater", 1)], 0)
     texts = ["Two-handed Axe Attack S...", "Two-handed Axe Attack Scroll: Ch..."]
@@ -479,8 +479,8 @@ def test_panel_grows_away_from_the_shop():
 
 # --- shop-window style (EXP/side-list restyle) ------------------------------------------------
 
-from mapletool import draw  # noqa: E402
-from mapletool.sidelist import (DEAL_BADGE, NPC_BADGE, SHOP_EDGE, SHOP_FRAME, SHOP_ICON_TILE,  # noqa: E402
+from maplestory_classic_tool import draw  # noqa: E402
+from maplestory_classic_tool.sidelist import (DEAL_BADGE, NPC_BADGE, SHOP_EDGE, SHOP_FRAME, SHOP_ICON_TILE,  # noqa: E402
                                 SHOP_LIST_BG, SHOP_ROW_BG, SHOP_ROW_LINE, SHOP_TEXT, SHOP_TITLE_BG,
                                 panel_prims)
 
@@ -605,7 +605,7 @@ def test_icon_rows_skip_the_tile_under_an_icon():
 
 
 def test_cached_measure_calls_the_font_once_per_text():
-    from mapletool.draw import cached_measure
+    from maplestory_classic_tool.draw import cached_measure
     calls = []
 
     def m(t, px, b):

@@ -1,6 +1,6 @@
 import json
 
-from mapletool.config import Settings, load_settings, save_settings
+from maplestory_classic_tool.config import Settings, load_settings, save_settings
 
 
 def test_defaults_written_when_missing(tmp_path):
@@ -85,24 +85,35 @@ def test_block_alt_shift_default_on_and_roundtrip(tmp_path):
 
 
 def test_data_dir_created(tmp_path, monkeypatch):
-    from mapletool.config import data_dir
+    from maplestory_classic_tool.config import data_dir
     monkeypatch.setenv("LOCALAPPDATA", str(tmp_path))
-    assert data_dir() == tmp_path / "MapleTool" and (tmp_path / "MapleTool").is_dir()
+    assert data_dir() == tmp_path / "MapleStoryClassicTool" and (tmp_path / "MapleStoryClassicTool").is_dir()
 
 
 def test_data_dir_moves_the_old_fmoverlay_folder(tmp_path, monkeypatch):
-    from mapletool.config import data_dir
+    from maplestory_classic_tool.config import data_dir
     monkeypatch.setenv("LOCALAPPDATA", str(tmp_path))
     (tmp_path / "fmoverlay").mkdir()
     (tmp_path / "fmoverlay" / "settings.json").write_text("{}")
     d = data_dir()
-    assert d == tmp_path / "MapleTool" and (d / "settings.json").read_text() == "{}"
+    assert d == tmp_path / "MapleStoryClassicTool" and (d / "settings.json").read_text() == "{}"
     assert not (tmp_path / "fmoverlay").exists()
 
 
-def test_data_dir_keeps_existing_new_folder(tmp_path, monkeypatch):
-    from mapletool.config import data_dir
+def test_data_dir_moves_the_maple_tool_folder_first(tmp_path, monkeypatch):
+    from maplestory_classic_tool.config import data_dir
     monkeypatch.setenv("LOCALAPPDATA", str(tmp_path))
     (tmp_path / "fmoverlay").mkdir()
     (tmp_path / "MapleTool").mkdir()
-    assert data_dir() == tmp_path / "MapleTool" and (tmp_path / "fmoverlay").exists()
+    (tmp_path / "MapleTool" / "settings.json").write_text('{"show_all": true}')
+    d = data_dir()
+    assert d == tmp_path / "MapleStoryClassicTool" and (d / "settings.json").read_text() == '{"show_all": true}'
+    assert not (tmp_path / "MapleTool").exists() and (tmp_path / "fmoverlay").exists()
+
+
+def test_data_dir_keeps_existing_new_folder(tmp_path, monkeypatch):
+    from maplestory_classic_tool.config import data_dir
+    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path))
+    (tmp_path / "fmoverlay").mkdir()
+    (tmp_path / "MapleStoryClassicTool").mkdir()
+    assert data_dir() == tmp_path / "MapleStoryClassicTool" and (tmp_path / "fmoverlay").exists()

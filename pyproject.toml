@@ -29,10 +29,10 @@ dependencies = [
 dev = ["pytest", "pyinstaller"]
 
 [tool.setuptools]
-packages = ["mapletool"]
+packages = ["maplestory_classic_tool"]
 
 [tool.setuptools.package-data]
-mapletool = ["assets/*"]
+maplestory_classic_tool = ["assets/*"]
 
 [tool.pytest.ini_options]
 markers = ["perf: timing budget", "live: needs running game"]

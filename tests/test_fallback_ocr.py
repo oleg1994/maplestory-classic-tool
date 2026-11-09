@@ -6,16 +6,16 @@ import numpy as np
 import pytest
 from rapidfuzz import fuzz
 
-from mapletool.catalog import fold_il
-from mapletool.detect import ShopLocator
-from mapletool.fallback_ocr import WindowsOcr
-from mapletool.layout import load_layout, to_base
-from mapletool.shop import parse_price
+from maplestory_classic_tool.catalog import fold_il
+from maplestory_classic_tool.detect import ShopLocator
+from maplestory_classic_tool.fallback_ocr import WindowsOcr
+from maplestory_classic_tool.layout import load_layout, to_base
+from maplestory_classic_tool.shop import parse_price
 
 ocr = WindowsOcr.create()
 pytestmark = pytest.mark.skipif(ocr is None, reason="Windows OCR unavailable")
 
-ASSETS = Path(__file__).parent.parent / "mapletool" / "assets"
+ASSETS = Path(__file__).parent.parent / "maplestory_classic_tool" / "assets"
 SHOPS = Path(__file__).parent / "fixtures" / "shops"
 LAYOUT = load_layout(ASSETS / "layout.json")
 LOCATOR = ShopLocator(cv2.imread(str(ASSETS / "anchor.png"), cv2.IMREAD_GRAYSCALE))

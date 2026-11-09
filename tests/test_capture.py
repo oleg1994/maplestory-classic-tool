@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from mapletool.capture import Grabber, pick_output
+from maplestory_classic_tool.capture import Grabber, pick_output
 
 OUTPUTS = [((0, 0), (0, 0, 3840, 2160)),        # primary 4K
            ((0, 1), (3840, 0, 7680, 2160)),     # second monitor to the right
@@ -158,7 +158,7 @@ def test_no_dxcam_backend_uses_mss():
 
 @pytest.mark.live
 def test_dxcam_outputs_enumerate():
-    from mapletool.capture import DxcamBackend
+    from maplestory_classic_tool.capture import DxcamBackend
     assert DxcamBackend().outputs()
 
 
@@ -177,7 +177,7 @@ def test_rebase_reuses_last_frame_without_capturing():
 
 
 def test_failed_output_retried_after_30s_with_refreshed_outputs():
-    from mapletool.capture import OUTPUT_RETRY_S
+    from maplestory_classic_tool.capture import OUTPUT_RETRY_S
     assert OUTPUT_RETRY_S == 30.0
     t = {"now": 100.0}
     dx = FakeDx(fail_create=[(0, 0)])
@@ -213,7 +213,7 @@ def test_grab_error_output_retried_after_30s():
 def test_crop_to_base_matches_resize_then_slice():
     import cv2
 
-    from mapletool.layout import crop_to_base, to_base
+    from maplestory_classic_tool.layout import crop_to_base, to_base
     rng = np.random.default_rng(1)
     full = cv2.resize(rng.integers(0, 255, (80, 120, 3), np.uint8), (2560, 1600), interpolation=cv2.INTER_NEAREST)
     box = (400, 300, 35, 35)

@@ -17,12 +17,12 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from mapletool.rate import IDLE_S, MIN_INCREASES, MIN_RATE_S, WINDOW_S, GainRate  # noqa: F401  (re-exported)
+from maplestory_classic_tool.rate import IDLE_S, MIN_INCREASES, MIN_RATE_S, WINDOW_S, GainRate  # noqa: F401  (re-exported)
 
-from mapletool import draw
-from mapletool.detect import ShopLocator
+from maplestory_classic_tool import draw
+from maplestory_classic_tool.detect import ShopLocator
 
-log = logging.getLogger("mapletool")
+log = logging.getLogger("maplestory_classic_tool")
 
 READ_INTERVAL = 1.0  # seconds between EXP reads while On
 SEARCH_BAND = 120  # the bar is anchored to the bottom edge: search only the bottom rows of the frame
@@ -265,7 +265,7 @@ class ExpReader:
         self._eight_saved = True
         try:
             if self.sample_dir is None:
-                from mapletool.config import data_dir
+                from maplestory_classic_tool.config import data_dir
                 self.sample_dir = data_dir()
             path = Path(self.sample_dir) / EIGHT_SAMPLE
             if not path.exists():
@@ -528,7 +528,7 @@ def build_exp_box(anchor, layout: StatusBarLayout, tracker: ExpTracker, now: flo
 
 def exp_box_to_screen(b: ExpBox, client_xy, scale: float, level_crop=None) -> ExpBox:
     """Screen pixels; `level_crop` (BGR at base resolution, the level tiles) is scaled into the box."""
-    from mapletool.sidelist import icon_png_b64
+    from maplestory_classic_tool.sidelist import icon_png_b64
     cx, cy = client_xy
     level = icon_png_b64(level_crop, scale * LEVEL_SCALE) if level_crop is not None else None
     return ExpBox(round(b.x * scale + cx), round(b.y * scale + cy), round(b.w * scale), round(b.h * scale),

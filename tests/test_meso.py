@@ -4,11 +4,11 @@ import cv2
 import numpy as np
 import pytest
 
-from mapletool.meso import MESO_GLYPHS, MesoReader, MesoTracker, classify, read_digits
+from maplestory_classic_tool.meso import MESO_GLYPHS, MesoReader, MesoTracker, classify, read_digits
 
 ROOT = Path(__file__).resolve().parents[1]
 SHOPS = ROOT / "tests" / "fixtures" / "shops"
-ASSETS = ROOT / "mapletool" / "assets"
+ASSETS = ROOT / "maplestory_classic_tool" / "assets"
 BASES = {"windowed1600_shop": (1228, 768), "windowed1600_stars": (1228, 768)}
 # captures with the item inventory open
 TRUTH = {"shop9": 611_814, "shop10": 611_814, "shop18": 599_144, "noshop_grind": 602_357,
@@ -66,7 +66,7 @@ def test_bad_grouping_rejected():
 
 
 def test_position_reused_cheaply(monkeypatch):
-    import mapletool.meso as meso
+    import maplestory_classic_tool.meso as meso
     r = reader()
     g = frame("shop18")
     r.read(g)

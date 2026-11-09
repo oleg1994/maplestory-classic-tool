@@ -8,10 +8,10 @@ import queue
 import threading
 import time
 
-from mapletool.config import data_dir, load_settings, save_settings
-from mapletool.winutil import log_memory
+from maplestory_classic_tool.config import data_dir, load_settings, save_settings
+from maplestory_classic_tool.winutil import log_memory
 
-log = logging.getLogger("mapletool")
+log = logging.getLogger("maplestory_classic_tool")
 
 JOIN_TIMEOUT = 1.0
 
@@ -65,15 +65,15 @@ class LiveSession:
         if self._built is None:
             build = self._build
             if build is None:
-                from mapletool.live import build_scanner as build
+                from maplestory_classic_tool.live import build_scanner as build
             scanner, settings = build(sync_if_empty=False)
             factory = self._grabber_factory
             if factory is None:
-                from mapletool.capture import Grabber as factory
+                from maplestory_classic_tool.capture import Grabber as factory
             self._built = (scanner, settings, factory(scanner.layout.base_size))
             exp_build = self._exp_build
             if exp_build is None:
-                from mapletool.live import build_exp_reader as exp_build
+                from maplestory_classic_tool.live import build_exp_reader as exp_build
             try:
                 self._exp_reader = exp_build(getattr(scanner, "fallback", None))  # shares the OCR engine
             except Exception:  # noqa: BLE001  (no EXP box; shops still work)
@@ -106,7 +106,7 @@ class LiveSession:
                 if sync_fn is None:
                     import requests
 
-                    from mapletool.catalog import sync as sync_fn
+                    from maplestory_classic_tool.catalog import sync as sync_fn
                     http = requests.Session()
                 else:
                     http = None
@@ -129,7 +129,7 @@ class LiveSession:
     def _map_reader(self):
         """Minimap reader for the EXP map-change reset; None when its templates cannot be loaded."""
         try:
-            from mapletool.live import build_map_reader
+            from maplestory_classic_tool.live import build_map_reader
             return build_map_reader()
         except Exception:  # noqa: BLE001
             log.warning("minimap reader unavailable; EXP sessions only restart with On", exc_info=True)
@@ -138,7 +138,7 @@ class LiveSession:
     def _meso_reader(self):
         """Inventory meso reader for the meso/h line; None when its template cannot be loaded."""
         try:
-            from mapletool.live import build_meso_reader
+            from maplestory_classic_tool.live import build_meso_reader
             return build_meso_reader()
         except Exception:  # noqa: BLE001
             log.warning("meso reader unavailable; the EXP box shows no mesos/hour", exc_info=True)
@@ -147,7 +147,7 @@ class LiveSession:
     def start(self) -> None:
         if self.running:
             return
-        from mapletool.live import LiveLoop
+        from maplestory_classic_tool.live import LiveLoop
         self._set_state(("starting",))
         try:
             scanner, settings, grabber = self._ensure_built()
@@ -157,10 +157,10 @@ class LiveSession:
             raise
         find_rect = self._find_rect
         if find_rect is None:
-            from mapletool.capture import find_client_rect as find_rect
+            from maplestory_classic_tool.capture import find_client_rect as find_rect
         hk_factory = self._hotkeys_factory
         if hk_factory is None:
-            from mapletool.hotkeys import HotkeyThread as hk_factory
+            from maplestory_classic_tool.hotkeys import HotkeyThread as hk_factory
         scanner.reset()
         self._worker_state = ("waiting",)
         self._no_data = len(scanner.catalog) == 0

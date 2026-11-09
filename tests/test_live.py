@@ -4,13 +4,13 @@ import zlib
 import numpy as np
 import pytest
 
-from mapletool.capture import find_client_rect
-from mapletool.config import Settings
-from mapletool.evaluate import ScanResult
-from mapletool.hotkeys import vk
-from mapletool.live import HEAL_EVERY, LiveLoop
-from mapletool.model import Annotation, Item, Listing, Verdict
-from mapletool.overlay import Label, to_screen
+from maplestory_classic_tool.capture import find_client_rect
+from maplestory_classic_tool.config import Settings
+from maplestory_classic_tool.evaluate import ScanResult
+from maplestory_classic_tool.hotkeys import vk
+from maplestory_classic_tool.live import HEAL_EVERY, LiveLoop
+from maplestory_classic_tool.model import Annotation, Item, Listing, Verdict
+from maplestory_classic_tool.overlay import Label, to_screen
 
 
 def test_find_client_rect_missing_window_none():
@@ -405,7 +405,7 @@ def test_window_base_log_lines(caplog):
             self.n += 1
             return profit_result() if gray.shape == (768, 1226) and self.n > 2 else NONE
     loop, state, _, _ = make_loop(Probe([]), rect=(4229, 381, 2560, 1600), settings=Settings(base_sizes={}))
-    with caplog.at_level("INFO", logger="mapletool"):
+    with caplog.at_level("INFO", logger="maplestory_classic_tool"):
         for _ in range(12):
             loop.step()
     lines = [r.getMessage() for r in caplog.records if r.getMessage().startswith("window rect=")]
@@ -438,7 +438,7 @@ def test_error_after_panel_posts_clear():
 def test_memory_logged_every_five_minutes(caplog):
     t = {"now": 0.0}
     loop, _, _, _ = make_loop(FakeScanner([NONE] * 10), clock=lambda: t["now"])
-    with caplog.at_level("INFO", logger="mapletool"):
+    with caplog.at_level("INFO", logger="maplestory_classic_tool"):
         loop.step()
         t["now"] = 299.0
         loop.step()
@@ -452,15 +452,15 @@ def test_memory_logged_every_five_minutes(caplog):
 
 
 def test_working_set_bytes_positive():
-    from mapletool.winutil import working_set_bytes
+    from maplestory_classic_tool.winutil import working_set_bytes
     assert working_set_bytes() > 10 * 1024 * 1024
 
 
 @pytest.mark.live
 def test_live_end_to_end():
-    from mapletool.capture import Grabber
-    from mapletool.layout import BaseResolver
-    from mapletool.live import build_scanner
+    from maplestory_classic_tool.capture import Grabber
+    from maplestory_classic_tool.layout import BaseResolver
+    from maplestory_classic_tool.live import build_scanner
     scanner, settings = build_scanner(sync_if_empty=False)
     rect = find_client_rect(settings.window_title)
     assert rect is not None
@@ -470,7 +470,7 @@ def test_live_end_to_end():
 
 
 def test_geometry_string_negative_origin():
-    from mapletool.overlay import geometry_string
+    from maplestory_classic_tool.overlay import geometry_string
     assert geometry_string(-1920, 0, 5760, 1080) == "5760x1080+-1920+0"
     assert geometry_string(0, 0, 7680, 2160) == "7680x2160+0+0"
 
@@ -485,7 +485,7 @@ def test_worker_error_log_throttled(caplog):
     clock = {"t": 1000.0}
     loop, _, ui, _ = make_loop(Boom())
     loop._clock = lambda: clock["t"]
-    with caplog.at_level("ERROR", logger="mapletool"):
+    with caplog.at_level("ERROR", logger="maplestory_classic_tool"):
         for _ in range(20):
             loop.step()
         recs = [r for r in caplog.records if r.levelname == "ERROR"]
@@ -589,9 +589,9 @@ def test_loop_crops_icons_for_listed_rows_into_panel():
 
 from pathlib import Path  # noqa: E402
 
-from mapletool.exp import ExpReading, load_statusbar  # noqa: E402
+from maplestory_classic_tool.exp import ExpReading, load_statusbar  # noqa: E402
 
-SB = load_statusbar(Path(__file__).resolve().parents[1] / "mapletool" / "assets" / "layout.json")
+SB = load_statusbar(Path(__file__).resolve().parents[1] / "maplestory_classic_tool" / "assets" / "layout.json")
 
 
 class FakeExpReader:
@@ -739,7 +739,7 @@ class FakeMapReader:
 
 
 def _map_id(k):
-    from mapletool.mapid import MapId
+    from maplestory_classic_tool.mapid import MapId
     ink = np.zeros((28, 96), bool)
     ink[:, k * 30:k * 30 + 30] = True
     return MapId("expanded", ink)
@@ -783,7 +783,7 @@ class FakeMesoReader:
         self.calls = 0
 
     def read(self, gray):
-        from mapletool.meso import MesoReading
+        from maplestory_classic_tool.meso import MesoReading
         self.calls += 1
         v = self.readings.pop(0) if len(self.readings) > 1 else self.readings[0]
         return MesoReading(v is not None, v)
