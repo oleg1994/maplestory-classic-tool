@@ -255,6 +255,7 @@ OpenCV and NumPy.
 | Path | Contents |
 |---|---|
 | `mapletool/panel.py` | Control window (the app's entry point) |
+| `mapletool/gamewidgets.py` | Game-style frame, title bar, buttons and checkboxes for the control window |
 | `mapletool/session.py`, `live.py` | Scan worker, hotkeys, live loop |
 | `mapletool/scanner.py`, `shop.py`, `detect.py`, `glyphs.py`, `layout.py` | Shop window detection and row reading |
 | `mapletool/catalog.py`, `evaluate.py` | MeowDB catalog and deal evaluation |

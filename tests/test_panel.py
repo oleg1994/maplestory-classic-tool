@@ -126,6 +126,40 @@ def test_close_restores_the_shortcut_first():
     assert calls == ["restore", "session", "root"]
 
 
+@pytest.mark.parametrize("state,color", [
+    (("off",), panel.DOT_OFF),
+    (("starting",), panel.DOT_WAIT),
+    (("waiting",), panel.DOT_WAIT),
+    (("no_shop",), panel.DOT_ON),
+    (("shop", 2), panel.DOT_ON),
+    (("no_data",), panel.DOT_ERROR),
+])
+def test_status_dot_color(state, color):
+    assert panel.status_color(state) == color
+
+
+@pytest.mark.parametrize("admin", [True, False])
+def test_control_panel_builds_with_game_widgets(admin):
+    tk = pytest.importorskip("tkinter")
+    try:
+        root = tk.Tk()
+    except tk.TclError:
+        pytest.skip("no Tk display")
+    root.withdraw()
+    try:
+        session = NS(state=("off",), on_state=None, pump=lambda: None, close=lambda: None)
+        p = panel.ControlPanel(root, session, admin=admin)
+        root.update_idletasks()
+        assert session.on_state == p._render
+        assert not p.on_btn.instate(["disabled"]) and p.off_btn.instate(["disabled"])
+        p._render(("shop", 2))
+        assert p.on_btn.instate(["disabled"]) and not p.off_btn.instate(["disabled"])
+        assert p.status_var.get() == "On — shop found (2 deals)"
+        assert bool(root.overrideredirect())
+    finally:
+        root.destroy()
+
+
 def test_restore_shortcut_never_raises():
     from types import SimpleNamespace as NS
     def boom():

@@ -30,6 +30,24 @@ def status_text(state) -> str:
     return str(kind)
 
 
+DOT_OFF = "#9aa3ad"
+DOT_WAIT = "#f0a030"
+DOT_ON = "#5cc45a"
+DOT_ERROR = "#d9534f"
+
+
+def status_color(state) -> str:
+    """Colour of the status dot beside status_text(state)."""
+    kind = state[0]
+    if kind == "off":
+        return DOT_OFF
+    if kind in ("starting", "waiting"):
+        return DOT_WAIT
+    if kind in ("no_shop", "shop"):
+        return DOT_ON
+    return DOT_ERROR
+
+
 def initial_checks(settings) -> dict:
     """Checkbox values shown when the control window opens."""
     return {"show_all": bool(settings.show_all), "exp_tracker": bool(settings.exp_tracker),
@@ -74,6 +92,14 @@ def set_window_icon(root) -> None:
         log.warning("could not set the window icon", exc_info=True)
 
 
+def center_on_screen(root) -> None:
+    """Borderless windows open at the screen corner; put the control window in the middle instead."""
+    w, h = root.winfo_reqwidth(), root.winfo_reqheight()
+    x = (root.winfo_screenwidth() - w) // 2
+    y = (root.winfo_screenheight() - h) // 2
+    root.geometry(f"+{max(0, x)}+{max(0, y)}")
+
+
 def restore_shortcut(blocker) -> None:
     """Give Windows its Alt+Shift shortcut back (on exit; never raises)."""
     if blocker is None:
@@ -99,7 +125,8 @@ def notify_already_running() -> None:
 class ControlPanel:
     def __init__(self, root, session, admin: bool | None = None, instance=None, blocker=None):
         import tkinter as tk
-        from tkinter import ttk
+
+        from mapletool import gamewidgets as gw
 
         self.root = root
         self.session = session
@@ -107,30 +134,46 @@ class ControlPanel:
         self.blocker = blocker  # langhotkey.LangHotkeyBlocker (Alt+Shift off while the app is open)
         root.title(TITLE)
         root.resizable(False, False)
-        frm = ttk.Frame(root, padding=12)
-        frm.pack(fill="both", expand=True)
+        root.overrideredirect(True)  # borderless: the game-style frame below is the window
+        s = gw.scale_for(root)
+        width = 260  # content width at 96 DPI
+        self._icon = None
+        try:
+            self._icon = gw.icon_image(icon_path(), round(16 * s))
+        except Exception:  # noqa: BLE001
+            log.warning("could not load the title bar icon", exc_info=True)
+        band = gw.framed(root, s)
+        gw.TitleBar(band, TITLE, on_close=self.close, on_minimize=lambda: gw.minimize(root), icon=self._icon,
+                    width=width, scale=s).pack(fill="x")
+        frm = gw.content_area(band, s)
+        inner_w = width - 22  # minus the content padding and edges
         self.status_var = tk.StringVar(value=status_text(session.state))
-        ttk.Label(frm, textvariable=self.status_var, font=("Segoe UI", 11, "bold")).pack(anchor="w", pady=(0, 8))
-        row = ttk.Frame(frm)
-        row.pack(fill="x")
-        self.on_btn = ttk.Button(row, text="On", command=self._on)
-        self.off_btn = ttk.Button(row, text="Off", command=self._off)
-        self.on_btn.pack(side="left", expand=True, fill="x", padx=(0, 4))
-        self.off_btn.pack(side="left", expand=True, fill="x", padx=(4, 0))
+        strip, self._set_dot = gw.status_strip(frm, self.status_var, s, width=inner_w)
+        strip.pack(anchor="w")
+        row = tk.Frame(frm, bg=gw.WINDOW_BG)
+        row.pack(fill="x", pady=(round(8 * s), 0))
+        half = (inner_w - 6) // 2
+        self.on_btn = gw.GameButton(row, "On", command=self._on, style="green", width=half, scale=s)
+        self.off_btn = gw.GameButton(row, "Off", command=self._off, style="orange", width=half, scale=s)
+        self.on_btn.pack(side="left")
+        self.off_btn.pack(side="right")
+        box, body = gw.option_list(frm)
+        box.pack(fill="x", pady=(round(10 * s), 0))
         self.show_all_var = tk.BooleanVar(value=False)
-        ttk.Checkbutton(frm, text="Show all rows", variable=self.show_all_var,
-                        command=self._show_all).pack(anchor="w", pady=(8, 0))
         self.exp_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(frm, text="EXP tracker", variable=self.exp_var,
-                        command=self._exp_tracker).pack(anchor="w", pady=(2, 0))
         self.alt_shift_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(frm, text="Block Alt+Shift language switch", variable=self.alt_shift_var,
-                        command=self._block_alt_shift).pack(anchor="w", pady=(2, 0))
+        options = [("Show all rows", self.show_all_var, self._show_all),
+                   ("EXP tracker", self.exp_var, self._exp_tracker),
+                   ("Block Alt+Shift language switch", self.alt_shift_var, self._block_alt_shift)]
+        for i, (text, var, cmd) in enumerate(options):
+            gw.pack_row(gw.GameCheck(body, text, var, command=cmd, width=inner_w - 2, scale=s), first=i == 0)
         if admin is None:
             admin = is_admin()
         if not admin:
-            ttk.Label(frm, text="F8/F9 need admin", foreground="#a00").pack(anchor="w", pady=(8, 0))
-            ttk.Button(frm, text="Restart as admin", command=self._restart).pack(fill="x", pady=(2, 0))
+            tk.Label(frm, text="F8/F9 hotkeys need admin", fg=gw.WARN_TEXT, bg=gw.WINDOW_BG,
+                     font=(gw.FONT, 9, "bold")).pack(anchor="w", pady=(round(10 * s), round(2 * s)))
+            gw.GameButton(frm, "Restart as admin", command=self._restart, style="orange", width=inner_w,
+                          scale=s).pack(anchor="w")
         session.on_state = self._render
         root.protocol("WM_DELETE_WINDOW", self.close)
         self._render(session.state)
@@ -138,6 +181,9 @@ class ControlPanel:
 
     def _render(self, state) -> None:
         self.status_var.set(status_text(state))
+        set_dot = getattr(self, "_set_dot", None)
+        if set_dot is not None:
+            set_dot(status_color(state))
         bs = button_states(state)
         self.on_btn.state(["!disabled"] if bs["on"] else ["disabled"])
         self.off_btn.state(["!disabled"] if bs["off"] else ["disabled"])
@@ -243,6 +289,9 @@ def main() -> int:
     panel.exp_var.set(checks["exp_tracker"])
     panel.alt_shift_var.set(checks["block_alt_shift"])
     root.update_idletasks()
+    center_on_screen(root)
+    from mapletool.gamewidgets import set_app_window
+    set_app_window(root)  # borderless windows get no taskbar button by default
     root.deiconify()
     try:
         root.mainloop()
