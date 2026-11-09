@@ -1,4 +1,4 @@
-from maplestory_classic_tool.catalog import Catalog, fetch_all, fold_il, normalize, sync
+from maplestory_classic_tool.catalog import USER_AGENT, Catalog, fetch_all, fold_il, normalize, sync
 from maplestory_classic_tool.model import Item, Match
 
 
@@ -60,7 +60,7 @@ def test_duplicate_names_use_min_price():
 def test_fetch_all_paginates_and_parses_string_stats(fake_session):
     items = fetch_all(fake_session)
     assert [(i.id, i.npc_price) for i in items] == [(1, 1), (270, 5), (9, 0)]
-    assert fake_session.calls[0][2]["User-Agent"] == "maplestory-classic-tool/0.1"
+    assert fake_session.calls[0][2]["User-Agent"] == USER_AGENT
 
 
 def test_save_load_roundtrip(tmp_path):

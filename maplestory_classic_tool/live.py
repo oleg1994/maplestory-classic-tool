@@ -12,6 +12,7 @@ from pathlib import Path
 import cv2
 import requests
 
+from maplestory_classic_tool import __version__
 from maplestory_classic_tool.catalog import Catalog, sync
 from maplestory_classic_tool.config import data_dir, load_settings
 from maplestory_classic_tool.detect import ShopLocator
@@ -476,7 +477,7 @@ def selftest() -> int:
         import maplestory_classic_tool.panel  # noqa: F401
         import maplestory_classic_tool.session  # noqa: F401
         import mss  # noqa: F401
-        msg = (f"selftest ok: catalog={len(scanner.catalog)} anchor={result.anchor} statusbar={bar} "
+        msg = (f"selftest ok: version={__version__} catalog={len(scanner.catalog)} anchor={result.anchor} statusbar={bar} "
                f"minimap={minimap} inventory={inventory} ocr={'yes' if ocr else 'no'} outputs={outputs} {time.monotonic() - t0:.2f}s")
         log.info(msg)
         print(msg)

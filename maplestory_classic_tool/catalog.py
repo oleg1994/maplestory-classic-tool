@@ -9,10 +9,11 @@ from pathlib import Path
 import requests
 from rapidfuzz import fuzz, process
 
+from . import __version__
 from .model import Item, Match
 
 API = "https://meowdb.com/msclassic/api"
-USER_AGENT = "maplestory-classic-tool/0.1"
+USER_AGENT = f"maplestory-classic-tool/{__version__}"
 FUZZY_CUTOFF = 90
 MAX_PAGES = 200
 CACHE_VERSION = 2  # v2 adds rechargeable/slot_max; older caches are not trusted (treated as empty)

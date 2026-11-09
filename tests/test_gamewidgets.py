@@ -4,15 +4,8 @@ from maplestory_classic_tool import gamewidgets as gw
 
 
 @pytest.fixture
-def root():
-    tk = pytest.importorskip("tkinter")
-    try:
-        r = tk.Tk()
-    except tk.TclError:
-        pytest.skip("no Tk display")
-    r.withdraw()
-    yield r
-    r.destroy()
+def root(tk_window):
+    return tk_window
 
 
 def test_button_colors_styles_differ_and_disabled_is_grey():

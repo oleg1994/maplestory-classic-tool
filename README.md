@@ -144,7 +144,14 @@ it keeps switching the input language. While MapleStory Classic Tool is open:
 
 ## Getting started
 
-### Option A: build the exe
+### Option A: download the exe
+
+Download `MapleStoryClassicTool.exe` from the
+[latest release](https://github.com/oleg1994/maplestory-classic-tool/releases/latest)
+and double-click it. Nothing to install. What changed in each version is in
+[CHANGELOG.md](CHANGELOG.md).
+
+### Option B: build the exe
 
 ```bat
 git clone https://github.com/oleg1994/maplestory-classic-tool.git
@@ -159,7 +166,7 @@ This produces a single file, `dist\MapleStoryClassicTool.exe`. Double-click it t
 To smoke-test the build without opening a window, run
 `dist\MapleStoryClassicTool.exe --selftest` (exit code 0 means OK).
 
-### Option B: run from source
+### Option C: run from source
 
 ```bat
 python -m venv .venv
@@ -308,6 +315,11 @@ python -m maplestory_classic_tool.calibrate build tests/fixtures/shops --out map
   box relative to its anchor, in base pixels.
 - `docs/glyph-checklist.md` tracks which item names were captured to teach which
   letters.
+
+**Releases.** [docs/RELEASING.md](docs/RELEASING.md) lists the steps: run all the
+tests, write the changes in [CHANGELOG.md](CHANGELOG.md), increase the version in
+`maplestory_classic_tool/__init__.py`, push, and publish the exe as a GitHub
+release. `python -m maplestory_classic_tool --version` prints the version.
 
 **Icon.** `packaging/make_icon.py` draws `maplestory_classic_tool/assets/app.ico`; add
 `--preview sheet.png` to see every size.

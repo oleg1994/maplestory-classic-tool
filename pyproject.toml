@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "maplestory-classic-tool"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Screen-reading companion for MapleStory Classic: FM price checker, EXP and meso tracker"
 readme = "README.md"
 license = {text = "MIT"}
@@ -30,6 +30,9 @@ dev = ["pytest", "pyinstaller"]
 
 [tool.setuptools]
 packages = ["maplestory_classic_tool"]
+
+[tool.setuptools.dynamic]
+version = {attr = "maplestory_classic_tool.__version__"}
 
 [tool.setuptools.package-data]
 maplestory_classic_tool = ["assets/*"]

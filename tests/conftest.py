@@ -47,3 +47,27 @@ def fake_session():
 @pytest.fixture
 def failing_session():
     return FailingSession()
+
+
+@pytest.fixture(scope="session")
+def tk_session_root():
+    """One Tk interpreter for the whole run: creating a fresh tk.Tk() per test intermittently fails on
+    Windows ("Can't find a usable tk.tcl"). Tests build their windows as Toplevels of this root."""
+    tk = pytest.importorskip("tkinter")
+    try:
+        r = tk.Tk()
+    except tk.TclError as e:
+        pytest.skip(f"no Tk display: {e}")
+    r.withdraw()
+    yield r
+    r.destroy()
+
+
+@pytest.fixture
+def tk_window(tk_session_root):
+    """A hidden Toplevel for one test, destroyed afterwards."""
+    import tkinter as tk
+    w = tk.Toplevel(tk_session_root)
+    w.withdraw()
+    yield w
+    w.destroy()

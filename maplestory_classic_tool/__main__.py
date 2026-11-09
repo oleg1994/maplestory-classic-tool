@@ -3,6 +3,7 @@ import argparse
 
 import cv2
 
+from maplestory_classic_tool import __version__
 from maplestory_classic_tool.draw import CvRenderer
 from maplestory_classic_tool.exp import ExpTracker, MesoLine, build_exp_box, exp_box_to_screen, exp_prims
 from maplestory_classic_tool.fallback_ocr import WindowsOcr
@@ -139,6 +140,7 @@ def main(argv=None) -> int:
     p.add_argument("--catalog")
     p.add_argument("--gui", action="store_true")
     p.add_argument("--selftest", action="store_true")
+    p.add_argument("--version", action="version", version=f"MapleStory Classic Tool {__version__}")
     args = p.parse_args(argv)
     if args.selftest:
         return selftest()
