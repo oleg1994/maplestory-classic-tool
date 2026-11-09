@@ -7,7 +7,7 @@ All notable changes to MapleStory Classic Tool. Versions follow
 Between releases, add each change under `## [Unreleased]` (create the heading if
 it is missing). A release renames that heading to the new version and date.
 
-## [0.1.0] - unreleased
+## [0.1.0] - 2026-11-10
 
 First release.
 
