@@ -73,7 +73,7 @@ def make_loop(scanner, rect=(0, 0, 2732, 1536), settings=None, clock=None, score
             return score(gray.shape[1])
         kw["score_fn"] = score_fn
         kw["regrab"] = lambda r, base: np.zeros((base[1], base[0]), np.uint8)
-    loop = LiveLoop(scanner, scanner.layout, settings or Settings(), lambda t: state["rect"], grab, ui, req,
+    loop = LiveLoop(scanner, scanner.layout, settings or Settings(show_all=False), lambda t: state["rect"], grab, ui, req,
                     save_settings=lambda s: state["saved"].append(dict(s.base_sizes)), **kw)
     return loop, state, ui, req
 

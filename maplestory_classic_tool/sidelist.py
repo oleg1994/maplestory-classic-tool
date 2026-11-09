@@ -190,6 +190,8 @@ class ShopListing:
         for v in verdicts:
             if v.item is None or v.status == "unknown":
                 continue  # never listed: no catalog match or no trustworthy verdict
+            if v.npc_total is None:
+                continue  # the catalog has no NPC price for it (none on meowdb): nothing to compare
             li = v.listing
             display = getattr(v, "display", "")
             if display:  # truncated name fitting several same-value tiers: keyed and shown by the OCR text

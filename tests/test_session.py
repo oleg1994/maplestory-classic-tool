@@ -118,7 +118,7 @@ class FakeExpReader:
 def make(scanner=None, settings=None, settings_path="x.json"):
     FakeHotkeys.instances = []
     scanner = scanner or FakeScanner()
-    settings = settings or Settings(poll_hz=100, base_sizes={"1366x768": [1366, 768]})
+    settings = settings or Settings(poll_hz=100, show_all=False, base_sizes={"1366x768": [1366, 768]})
     builds = []
 
     def build(**kw):

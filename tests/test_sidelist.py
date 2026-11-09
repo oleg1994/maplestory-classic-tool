@@ -31,7 +31,8 @@ def deal(row, name, price, profit, as_item=None):
     return v(row, name, 1, price, "profit", price + profit, profit, as_item)
 
 
-def plain(row, name, price, npc=None, as_item=None):
+def plain(row, name, price, npc=1, as_item=None):
+    """A listed non-deal row (npc=None: an item with no NPC price, which is never listed)."""
     return v(row, name, 1, price, "no_profit", npc, None if npc is None else npc - price, as_item)
 
 
@@ -185,10 +186,18 @@ def _listing(rows):
     return sl
 
 
+def test_items_without_an_npc_price_are_not_listed():
+    """Catalog items with no price on meowdb (npc_total None) never become rows; deals still do."""
+    sl = _listing([plain(0, "NoPrice", 99, None), plain(1, "Priced", 50, 10), deal(2, "Deal", 20, 7)])
+    assert [r.name for r in sl.rows] == ["Priced", "Deal"]
+    p = build_panel(sl, ANCHOR, LAYOUT, show_all=True)
+    assert len(p.lines) == 2
+
+
 def test_row_text_formats():
     assert row_text(_listing([deal(0, "Name", 3000, 12345)]).rows[0]) == "+12,345  Name  1 for 3,000"
     assert row_text(_listing([plain(0, "Name", 99, 1234)]).rows[0]) == "NPC 1,234  Name  1 for 99"
-    assert row_text(_listing([plain(0, "Name", 99)]).rows[0]) == "NPC -  Name  1 for 99"
+    assert row_text(ListedRow("Name", 1, 99, "no_profit", None, None, 1, 0)) == "NPC -  Name  1 for 99"
     assert row_text(ListedRow("Name", None, None, "unknown", None, None, 1, 0)) == "?  Name"
     assert row_text(ListedRow("Name", 2, 500, "unknown", None, None, 1, 0)) == "?  Name  2 for 500"
     two = _listing([plain(0, "N", 5, 9), plain(1, "N", 5, 9)]).rows[0]

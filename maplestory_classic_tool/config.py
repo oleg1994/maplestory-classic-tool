@@ -33,7 +33,7 @@ class Settings:
     window_title: str = "MapleStory"
     poll_hz: int = 10
     min_profit: int = 1
-    show_all: bool = False
+    show_all: bool = True
     exp_tracker: bool = True  # EXP/hour + time-to-level box above the status bar
     block_alt_shift: bool = True  # Windows' Alt+Shift language shortcut off while MapleStory Classic Tool is open
     catalog_max_age_days: int = 7

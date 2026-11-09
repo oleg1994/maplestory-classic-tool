@@ -53,8 +53,9 @@ is blurred.)*
   more than its price is shown, **most profitable first**: the item's icon and
   name, the shop's price line (`1 for 3,000 mesos`) and a green profit badge
   (`+12,345`).
-- **Show all rows** also lists the other items, each with a grey `NPC 1,234`
-  badge showing what the NPC pays.
+- **Show all rows** (on by default) also lists the other items, each with a grey
+  `NPC 1,234` badge showing what the NPC pays. Items MeowDB has no NPC price for
+  are left out.
 - **It remembers the whole shop.** Scroll through a shop once and every item stays
   listed until you close it. Identical listings show as `(x2)`. Hovering the
   shop's buttons doesn't clear the list; it stays as long as the shop's title is
@@ -178,7 +179,7 @@ captured until you press **On**.
 | Control | What it does |
 |---|---|
 | **On / Off** | Start and stop reading the screen. |
-| **Show all rows** | Also list shop items that aren't a deal, with what the NPC pays. |
+| **Show all rows** | Also list shop items that aren't a deal, with what the NPC pays (on by default; items with no NPC price on MeowDB are never listed). |
 | **EXP tracker** | Show the EXP / meso box on the status bar. |
 | **Block Alt+Shift language switch** | Turn Windows' Alt+Shift language shortcut off while MapleStory Classic Tool is open. |
 | **Restart as admin** | Shown only when not elevated. Needed only if the game runs as administrator and you want the hotkeys below. |

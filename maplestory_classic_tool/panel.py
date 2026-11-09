@@ -159,7 +159,7 @@ class ControlPanel:
         self.off_btn.pack(side="right")
         box, body = gw.option_list(frm)
         box.pack(fill="x", pady=(round(10 * s), 0))
-        self.show_all_var = tk.BooleanVar(value=False)
+        self.show_all_var = tk.BooleanVar(value=True)
         self.exp_var = tk.BooleanVar(value=True)
         self.alt_shift_var = tk.BooleanVar(value=True)
         options = [("Show all rows", self.show_all_var, self._show_all),

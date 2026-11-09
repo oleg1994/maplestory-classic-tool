@@ -33,7 +33,12 @@ def test_bool_strings_coerced(tmp_path):
     assert _load(tmp_path, {"show_all": "TRUE"}).show_all is True
     assert _load(tmp_path, {"show_all": 1}).show_all is True
     assert _load(tmp_path, {"show_all": "no"}).show_all is False
-    assert _load(tmp_path, {"show_all": "maybe"}).show_all is False  # default
+    assert _load(tmp_path, {"show_all": "maybe"}).show_all is True  # default
+
+
+def test_show_all_on_by_default(tmp_path):
+    assert Settings().show_all is True
+    assert _load(tmp_path, {}).show_all is True
 
 
 def test_garbage_int_uses_default_and_warns(tmp_path, caplog):
